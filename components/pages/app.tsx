@@ -11,7 +11,8 @@ export default function Home() {
   const { context } = useMiniAppContext();
   return (
     <SafeAreaContainer insets={context?.client.safeAreaInsets}>
-      <Demo />
+      <img src="https://governing-guild-il-reed.trycloudflare.com/images/wrapcast.png" />
+      <a href="https://monadinvaders.xyz">play</a>
     </SafeAreaContainer>
   );
 }

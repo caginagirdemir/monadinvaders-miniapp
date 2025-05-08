@@ -1,0 +1,10 @@
+{
+  "frame": {
+    "version": "1",
+    "name": "Monad Invaders",
+    "iconUrl": "https://governing-guild-il-reed.trycloudflare.com/images/icon.png",
+    "homeUrl": "https://governing-guild-il-reed.trycloudflare.com",
+    "splashImageUrl": "https://governing-guild-il-reed.trycloudflare.com/images/splash.png",
+    "splashBackgroundColor": "#ff5522"
+  }
+}

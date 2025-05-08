@@ -6,13 +6,13 @@ const frame = {
   version: "next",
   imageUrl: `${APP_URL}/images/feed.png`,
   button: {
-    title: "Launch Template",
+    title: "Play Game",
     action: {
       type: "launch_frame",
-      name: "Monad Farcaster MiniApp Template",
-      url: APP_URL,
+      name: "Monad Invaders",
+      url: 'https://governing-guild-il-reed.trycloudflare.com',
       splashImageUrl: `${APP_URL}/images/splash.png`,
-      splashBackgroundColor: "#f7f7f7",
+      splashBackgroundColor: "#ffffff",
     },
   },
 };
