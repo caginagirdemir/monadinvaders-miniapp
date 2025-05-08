@@ -2,6 +2,7 @@ import { SafeAreaContainer } from "@/components/safe-area-container";
 import { useMiniAppContext } from "@/hooks/use-miniapp-context";
 import dynamic from "next/dynamic";
 import IframeGame from "@/components/IframeGame";
+import { WalletActions } from "@/components/Home/WalletActions";
 
 const Demo = dynamic(() => import("@/components/Home"), {
   ssr: false,
@@ -13,6 +14,7 @@ export default function Home() {
   return (
     <SafeAreaContainer insets={context?.client.safeAreaInsets}>
        <IframeGame />
+       <WalletActions />
     </SafeAreaContainer>
   );
 }
