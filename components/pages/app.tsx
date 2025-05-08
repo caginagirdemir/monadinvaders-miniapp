@@ -1,6 +1,7 @@
 import { SafeAreaContainer } from "@/components/safe-area-container";
 import { useMiniAppContext } from "@/hooks/use-miniapp-context";
 import dynamic from "next/dynamic";
+import IframeGame from "@/components/IframeGame";
 
 const Demo = dynamic(() => import("@/components/Home"), {
   ssr: false,
@@ -11,8 +12,7 @@ export default function Home() {
   const { context } = useMiniAppContext();
   return (
     <SafeAreaContainer insets={context?.client.safeAreaInsets}>
-      <img src="https://monadinvaders-miniapp.vercel.app/images/wrapcast.png" />
-      <a href="https://monadinvaders.xyz">play</a>
+       <IframeGame />
     </SafeAreaContainer>
   );
 }

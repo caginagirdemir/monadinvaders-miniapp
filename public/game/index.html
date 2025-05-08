@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="fc:frame" content='{
+      "version": "vNext",
+      "imageUrl": "https://monadinvaders.xyz/images/feed.png",
+      "buttons": [
+        {
+          "title": "Play Now",
+          "action": {
+            "type": "link",
+            "url": "https://monadinvaders.xyz"
+          }
+        }
+      ]
+    }' />
+
+    <title>Monad Invaders</title>
+    <link rel="stylesheet" type="text/css" href="./css/index.css">
+    <link href="https://fonts.googleapis.com/css?family=Bungee+Inline" rel="stylesheet">
+  </head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-GTVFZFDTJK"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-GTVFZFDTJK');
+  </script>
+  <body>
+
+    <div id="container">
+      <div
+        class="hide"
+        id="menu-button"
+        style="display:none;">
+        Menu
+      </div>
+      <canvas id="game-canvas"></canvas>
+
+
+      <div id="menu-container" class="hide menu-container">
+        <div class='header'>MONAD INVADERS</div>
+        <div id='about-button' class='hide button'>About</div>
+        <div id='instructions-button' class='hide button'>Instructions</div>
+        <div id='resume-button' class='hide button'>Resume</div>
+        <div id='restart-button' class='hide button'>Restart</div>
+      </div>
+
+      <div id='about' class='hide'>
+        <div id='close-about' class='hide'>close[x]</div>
+        <p>
+          Team
+          <br>
+          <br>
+          <br>
+          @caginonthesky
+          <br>
+          dev
+          <br>
+          <br>
+          @gizdusum
+          <br>
+          contributer
+        <p/>
+      </div>
+
+      <div id='instructions' class='hide'>
+        <div id='close-instructions' class='hide'>close[x]</div>
+        <p>
+          Press space to shoot, and use the arrow keys to move.
+
+          <br>
+
+        <p/>
+      </div>
+
+      <div id="invader-info" class="show">
+        <p>10 points</p>
+        <p>20 points</p>
+        <p>40 points</p>
+        <p>?? points</p>
+      </div>
+
+      <div id='splash-instruction' class='show'>
+        <p>SPACE TO SHOOT</p>
+        <p>ARROW KEYS TO MOVE</p>
+      </div>
+      <div id='play-game'>
+        <p>CONNECT WALLET</p>
+      </div>
+      <div id='leaderboard'>
+        <p>LEADERBOARD</p>
+      </div>
+      <div id='reload-game' class='game-button hide'>
+        <a href="#"><p id="endGameButton"></p></a>
+      </div>
+
+      <!-- Sprite images -->
+
+      <img
+        id="audio"
+        src="./images/audio.jpg" />
+
+      <img
+        class='hide'
+        id='mute'
+        src='./images/mute.jpg' />
+
+      <img
+        class='hide'
+        id='game-over'
+        src='./images/game-over.png' />
+
+      <img
+        id="main-logo"
+        src="./images/MonadGalacticRepublic.png"
+        
+        />
+
+      <!-- <img
+        id="play-game"
+        src="./images/play-game.jpg" /> -->
+
+      <img
+        class="hide"
+        id="defender"
+        src="./images/defender.jpg" />
+
+      <img
+        class='hide'
+        id='defender-death'
+        src='./images/defender-death.jpg' />
+
+      <img
+        class=""
+        id="grunt-1"
+        src="./images/grunt-1.png" />
+
+      <img
+        class="hide"
+        id="grunt-2"
+        src="./images/grunt-2.png" />
+
+      <img
+        class=""
+        id="soldier-1"
+        src="./images/soldier-1.png" />
+
+      <img
+        class="hide"
+        id="soldier-2"
+        src="./images/soldier-2.png" />
+
+      <img
+        class=""
+        id="invader-1"
+        src='./images/invader-1.png' />
+
+      <img
+        class="hide"
+        id="invader-2"
+        src='./images/invader-2.png' />
+
+      <img
+        class=""
+        id="ufo"
+        src="./images/ufo-1.png" />
+
+      <img
+        class="hide"
+        id="lives"
+        src="./images/lives.jpg" />
+
+      <img
+        class="hide"
+        id="ship-death"
+        src="./images/ship-death.jpg" />
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
+    <script src="bundle.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.0.5/howler.core.min.js"></script>
+  </body>
+
+
+</html>

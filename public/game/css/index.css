@@ -1,0 +1,428 @@
+body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  background-color: #070707;
+
+  padding: 0;
+  margin: 0;
+  border: 0;
+}
+
+#container {
+  width: 320px;
+  position: relative;
+  background-color: #000;
+  
+  width: 100%;
+  max-width: 360px;
+  aspect-ratio: 2 / 3;
+  height: auto;
+}
+
+#game-canvas {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+#invader-info {
+  position: absolute;
+  bottom: 250px;
+  left: 148px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  width: 71px;
+  height: 92px;
+
+  font-family: 'Bungee Inline', cursive;
+  font-size: 12px;
+  color: #fff;
+}
+
+#invader-info p {
+  margin: 0;
+  border: 0;
+  padding: 0;
+}
+
+#splash-instruction {
+  position: absolute;
+  bottom: 220px;
+  left: 76px;
+  width: 178px;
+  height: 25px;
+
+  text-align: center;
+  font-family: 'Bungee Inline', cursive;
+  font-size: 16px;
+  color: #fff;
+  letter-spacing: 1px;
+}
+
+#audio {
+  position: absolute;
+  bottom: 6px;
+  right: 4px;
+
+  height: 25px;
+  width: 25px;
+}
+
+#mute {
+  position: absolute;
+  bottom: 6px;
+  right: 4px;
+
+  height: 25px;
+  width: 25px;
+}
+
+#audio:hover {
+  cursor: pointer;
+}
+
+#mute:hover {
+  cursor: pointer;
+}
+
+#menu-button {
+  font-family: 'Bungee Inline', cursive;
+  font-size: 16px;
+  color: #e7e7e7;
+
+  position: absolute;
+  top: 7px;
+  left: 149px;
+
+  width: 107px;
+  height: 19px;
+  z-index: 5;
+}
+
+#menu-button:hover {
+  cursor: pointer;
+  color: #ffff6d;
+}
+
+.text-white{
+  font-family: 'Bungee Inline', cursive;
+  font-size: 16px;
+  color: #e7e7e7;
+}
+
+#menu-container {
+  position: absolute;
+  bottom: 63px;
+  left: 107px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+
+  background-color: grey;
+  width: 107px;
+
+
+  font-family: 'Bungee Inline', cursive;
+  font-size: 16px;
+  letter-spacing: 1px;
+  color: #fff;
+
+  border-radius: 6px;
+}
+
+.header {
+  color: #ee300c;
+}
+
+.button:hover {
+  cursor: pointer;
+}
+
+#about-button:hover {
+  cursor: pointer;
+  color: #ffff6d;
+}
+
+#about {
+  padding: 0 10px 0 10px;
+
+  position: absolute;
+  bottom: 63px;
+  left: 107px;
+
+  background-color: grey;
+  height: 253px;
+  width: 107px;
+
+  font-family: 'Bungee Inline', cursive;
+  letter-spacing: 1px;
+  line-height: 16px;
+  color: #000;
+
+  text-align: center;
+  border-radius: 6px;
+}
+
+#port-link {
+  color: #ffff6d;
+  text-decoration: none;
+  transition: color .15s ease-in;
+}
+
+#port-link:hover {
+  color: #fff;
+  transition: color .15s ease-in;
+}
+
+#close-about {
+  margin-left: 71px;
+  margin-top: 3px;
+  color: #fff;
+}
+
+#close-about:hover {
+  cursor: pointer;
+  color: #ffff6d;
+}
+
+#instructions-button:hover {
+  cursor: pointer;
+  color: #ffff6d;
+}
+
+#instructions {
+  padding: 0 15px 0 15px;
+
+  position: absolute;
+  bottom: 63px;
+  left: 107px;
+
+  background-color: grey;
+  height: 253px;
+  width: 107px;
+
+  font-family: 'Bungee Inline', cursive;
+  letter-spacing: 1px;
+  line-height: 16px;
+  color: #000;
+
+  text-align: center;
+  border-radius: 6px;
+}
+
+#close-instructions {
+  margin-left: 71px;
+  margin-top: 3px;
+  color: #fff;
+}
+
+#close-instructions:hover {
+  cursor: pointer;
+  color: #ffff6d;
+}
+
+#close-instructions:hover {
+  cursor: pointer;
+  color: #ffff6d;
+}
+
+#resume-button:hover {
+  cursor: pointer;
+  color: #ffff6d;
+}
+
+#restart-button:hover {
+  cursor: pointer;
+  color: #ffff6d;
+}
+
+#main-logo {
+  position: absolute;
+  top: 6px;
+  left: 76px;
+
+  height: 100px;
+  width: 178px;
+}
+
+#grunt-1 {
+  position: absolute;
+  left: 120px;
+  bottom: 330px;
+
+  height: 20px;
+  width: 20px;
+}
+
+#soldier-1 {
+  position: absolute;
+  left: 120px;
+  bottom: 304px;
+
+  height: 20px;
+  width: 20px;
+}
+
+#invader-1 {
+  position: absolute;
+  left: 120px;
+  bottom: 279px;
+
+  height: 20px;
+  width: 20px;
+}
+
+#ufo {
+  position: absolute;
+  left: 115px;
+  bottom: 251px;
+
+  height: 20px;
+  width: 35px;
+}
+
+#play-game {
+  position: absolute;
+  bottom: 80px;
+  left: 90px;
+
+  z-index: 5;
+  height: 32px;
+  width: 150px;
+  transition: all .2s ease-in;
+  border: 2px solid #fff;
+  border-radius: 2px;
+
+  font-family: 'Bungee Inline', cursive;
+  font-size: 14px;
+  color: #fff;
+  letter-spacing: 1px;
+}
+
+#play-game:hover {
+  cursor: pointer;
+  transition: all .2s ease-in;
+  background: rgba(255,255,255,0.4);
+}
+
+#play-game p {
+  width: 100%;
+  height: 100%;
+
+  position: absolute;
+  top: -15px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
+#leaderboard {
+  position: absolute;
+  bottom: 40px;
+  left: 90px;
+
+  z-index: 5;
+  height: 32px;
+  width: 150px;
+  transition: all .2s ease-in;
+  border: 2px solid #fff;
+  border-radius: 2px;
+
+  font-family: 'Bungee Inline', cursive;
+  font-size: 14px;
+  color: #fff;
+  letter-spacing: 1px;
+}
+
+#leaderboard:hover {
+  cursor: pointer;
+  transition: all .2s ease-in;
+  background: rgba(255,255,255,0.4);
+}
+
+#leaderboard p {
+  width: 100%;
+  height: 100%;
+
+  position: absolute;
+  top: -15px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
+
+
+
+.game-button {
+   position: absolute;
+  bottom: 40px;
+  left: 105px;
+
+  z-index: 5;
+  height: 32px;
+  width: 150px;
+  transition: all .2s ease-in;
+  border: 2px solid #fff;
+  border-radius: 2px;
+
+  font-family: 'Bungee Inline', cursive;
+  font-size: 16px;
+  color: #fff;
+  letter-spacing: 1px;
+}
+
+.game-button:hover {
+  cursor: pointer;
+  transition: all .2s ease-in;
+  background: rgba(255,255,255,0.4);
+} 
+
+.game-button p {
+  width: 100%;
+  height: 100%;
+
+  position: absolute;
+  top: -15px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.hide {
+  display: none;
+  z-index: -5;
+}
+
+.show {
+  z-index: 5;
+}
+
+#game-over {
+  position: absolute;
+  z-index: 5;
+  bottom: 95px;
+  left: 25px;
+  width: 320px;
+}
+
+.white-text {
+  color:white !important;
+}
