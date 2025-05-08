@@ -10,7 +10,7 @@ const frame = {
     action: {
       type: "launch_frame",
       name: "Monad Invaders",
-      url: 'https://governing-guild-il-reed.trycloudflare.com',
+      url: 'https://monadinvaders-miniapp.vercel.app',
       splashImageUrl: `${APP_URL}/images/splash.png`,
       splashBackgroundColor: "#ffffff",
     },
