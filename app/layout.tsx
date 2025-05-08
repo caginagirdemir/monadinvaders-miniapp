@@ -12,14 +12,14 @@ export const metadata = {
   other: {
     "fc:frame": JSON.stringify({
       version: "next",
-      imageUrl: "https://governing-guild-il-reed.trycloudflare.com/feed.png",
+      imageUrl: "https://monadinvaders-miniapp.vercel.app/feed.png",
       button: {
         title: "Oyna",
         action: {
           type: "launch_frame",
           name: "Monad Invaders",
-          url: "https://governing-guild-il-reed.trycloudflare.com",
-          splashImageUrl: "https://governing-guild-il-reed.trycloudflare.com/images/splash.png",
+          url: "https://monadinvaders-miniapp.vercel.app",
+          splashImageUrl: "https://monadinvaders-miniapp.vercel.app/images/splash.png",
           splashBackgroundColor: "#000000"
         }
       }

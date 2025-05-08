@@ -2,9 +2,9 @@
   "frame": {
     "version": "1",
     "name": "Monad Invaders",
-    "iconUrl": "https://governing-guild-il-reed.trycloudflare.com/images/icon.png",
-    "homeUrl": "https://governing-guild-il-reed.trycloudflare.com",
-    "splashImageUrl": "https://governing-guild-il-reed.trycloudflare.com/images/splash.png",
+    "iconUrl": "https://monadinvaders-miniapp.vercel.app/images/icon.png",
+    "homeUrl": "https://monadinvaders-miniapp.vercel.app",
+    "splashImageUrl": "https://monadinvaders-miniapp.vercel.app/images/splash.png",
     "splashBackgroundColor": "#ff5522"
   }
 }
