@@ -37,7 +37,7 @@ export default function Home() {
             .connectFromIframe()
             ?.then((address) => {
               (event.source as Window).postMessage(
-                { type: "CONNECT_WALLET_RESULT", success: false },
+                { type: "CONNECT_WALLET_RESULT", success: !!address, address },
                 "*"
               );
             })
@@ -46,7 +46,6 @@ export default function Home() {
                 { type: "CONNECT_WALLET_RESULT", success: false },
                 "*"
               );
-
             });
         }
       }
