@@ -199,12 +199,15 @@
 
 	
 	  playGameButton.addEventListener("click", async () => {
+		window.parent.postMessage({ type: "CONNECT_WALLET" }, "*");
+
+		
 		if (typeof window.ethereum !== "undefined") {
 			try {
-			  await switchToMonadTestnet();
-              const provider = new window.ethers.providers.Web3Provider(window.ethereum);
-				await provider.send("eth_requestAccounts", []);
-				signer = provider.getSigner();
+			  //await switchToMonadTestnet();
+              //const provider = new window.ethers.providers.Web3Provider(window.ethereum);
+				//await provider.send("eth_requestAccounts", []);
+				//signer = provider.getSigner();
 
 				
 				gameView = new GameView(ctx, canvasSize, signer);

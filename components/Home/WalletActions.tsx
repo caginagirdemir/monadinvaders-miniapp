@@ -9,6 +9,7 @@ import {
   useSwitchChain,
 } from "wagmi";
 import { farcasterFrame } from "@farcaster/frame-wagmi-connector";
+import { useEffect } from "react";
 
 export function WalletActions() {
   const { isEthProviderAvailable } = useMiniAppContext();
@@ -24,6 +25,20 @@ export function WalletActions() {
       value: parseEther("1"),
     });
   }
+
+
+useEffect(() => {
+  if (typeof window !== "undefined") {
+    window.connectFromIframe = () => {
+      if (isEthProviderAvailable) {
+        connect({ connector: farcasterFrame() });
+      } else {
+        alert("Ethereum provider not available");
+      }
+    };
+  }
+}, [connect, isEthProviderAvailable]);
+  
 
   return (
     <div className="space-y-4 border border-[#333] rounded-md p-4">
