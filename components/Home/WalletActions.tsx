@@ -46,16 +46,19 @@ export function WalletActions() {
 
 useEffect(() => {
   if (typeof window !== "undefined") {
-    
     window.submitScoreFromIframe = async (score: number): Promise<string> => {
       if (!isEthProviderAvailable) {
         throw new Error("Ethereum provider not available");
       }
 
+      let walletAddress = address;
+
       try {
         // Cüzdan bağlı değilse bağlan
         if (!isConnected) {
-          await connectAsync({ connector: farcasterFrame() });
+          const result = await connectAsync({ connector: farcasterFrame() });
+          walletAddress = result.accounts?.[0];
+          if (!walletAddress) throw new Error("No wallet address found after connect");
         }
 
         // Chain yanlışsa değiştir
@@ -65,9 +68,13 @@ useEffect(() => {
 
         // Doğru client'i al
         const freshClient = await getWalletClient(config, {
-          account: address!,
+          account: walletAddress!,
           chainId: monadTestnet.id,
         });
+
+        if (!freshClient) {
+          throw new Error("Wallet client not available");
+        }
 
         // Kontrat çağrısı
         const txHash = await freshClient.writeContract({
@@ -83,8 +90,6 @@ useEffect(() => {
         throw new Error("Submit failed: " + err.message);
       }
     };
-
-
   }
 }, [
   isConnected,
@@ -92,7 +97,7 @@ useEffect(() => {
   isEthProviderAvailable,
   chainId,
   switchChain,
-  walletClient,
+  address,
 ]);
 
 
