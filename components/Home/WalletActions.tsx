@@ -96,11 +96,14 @@ export function WalletActions() {
       // submit score from iframe
       window.submitScoreFromIframe = (score: number) => {
         if (isEthProviderAvailable) {
+          console.log("test5")
           if (chainId !== monadTestnet.id) {
             switchChain({ chainId: monadTestnet.id });
           }
+          console.log("test6")
           submitScoreHandler(score);
         } else {
+          console.log("test7")
           alert("Ethereum provider not available");
         }
       };
