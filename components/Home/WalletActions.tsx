@@ -9,11 +9,11 @@ import {
   useDisconnect,
   useSendTransaction,
   useSwitchChain,
+  useWalletClient 
 } from "wagmi";
 import { farcasterFrame } from "@farcaster/frame-wagmi-connector";
 import { useEffect } from "react";
 import { getWalletClient } from "wagmi/actions";
-import { config } from "@/lib/wagmi"; 
 
 export function WalletActions() {
   const { isEthProviderAvailable } = useMiniAppContext();
@@ -22,6 +22,7 @@ export function WalletActions() {
   const { data: hash, sendTransaction } = useSendTransaction();
   const { switchChain } = useSwitchChain();
   const { connect } = useConnect();
+  const { data: walletClient } = useWalletClient();
 
   const CONTRACT_ADDRESS = "0x859643c0aC12BF9A192BC5c0844B5047F046b9D1";
 
@@ -43,36 +44,36 @@ export function WalletActions() {
   }
 
   async function submitScoreHandler(score: number) {
-    if (!isConnected) {
-        alert("Wallet not connected");
-        return;
-    }
-    try {
-      const walletClient = await getWalletClient(config);
-
-      if (!walletClient) {
-        alert("Wallet client not available");
-        return;
-      }
-
-      if (chainId !== monadTestnet.id) {
-        alert("Please switch to Monad Testnet");
-        return;
-      }
-
-      const txHash = await walletClient.writeContract({
-        address: CONTRACT_ADDRESS,
-        abi: ABI as Abi,
-        functionName: "submitScore",
-        args: [score],
-      });
-
-      alert(`✅ Tx sent: ${txHash}`);
-    } catch (error: any) {
-      console.error("submitScore error:", error);
-      alert("❌ Submit failed: " + error.message);
-    }
+  if (!isConnected) {
+    alert("Wallet not connected");
+    return;
   }
+
+  try {
+    if (!walletClient) {
+      alert("Wallet client not available");
+      return;
+    }
+
+    if (chainId !== monadTestnet.id) {
+      alert("Please switch to Monad Testnet");
+      return;
+    }
+
+    const txHash = await walletClient.writeContract({
+      address: CONTRACT_ADDRESS,
+      abi: ABI as Abi,
+      functionName: "submitScore",
+      args: [score],
+    });
+
+    alert(`✅ Tx sent: ${txHash}`);
+  } catch (error: any) {
+    console.error("submitScore error:", error);
+    alert("❌ Submit failed: " + error.message);
+  }
+}
+
 
   // 🧠 iframe ile bağlantı ve submit trigger
   useEffect(() => {
