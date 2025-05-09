@@ -43,6 +43,10 @@ export function WalletActions() {
   }
 
   async function submitScoreHandler(score: number) {
+    if (!isConnected) {
+        alert("Wallet not connected");
+        return;
+    }
     try {
       const walletClient = await getWalletClient(config);
 
