@@ -43,7 +43,9 @@ export function WalletActions() {
   }
 
   async function submitScoreHandler(score: number) {
-    console.log("test8")
+    console.log("submitScoreHandler SCORE:", score);
+    console.log("walletClient:", walletClient);
+
       if (!isConnected) {
         alert("Wallet not connected");
         return;
@@ -66,10 +68,9 @@ console.log("test9")
         functionName: "submitScore",
         args: [score],
       });
-console.log("test10")
+      console.log("TX SENT", txHash);
       alert(`✅ Tx sent: ${txHash}`);
     } catch (error: any) {
-      console.log("test11")
       console.error("submitScore error:", error);
       alert("❌ Submit failed: " + error.message);
     }
