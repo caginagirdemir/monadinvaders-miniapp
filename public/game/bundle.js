@@ -199,26 +199,33 @@
 	});
 
 	async function requestWalletConnection() {
-		return new Promise((resolve, reject) => {
-			function handler(event) {
-			if (event.data?.type === "CONNECT_WALLET_RESULT") {
-				console.log("test2");
-				window.removeEventListener("message", handler);
-				console.log("test3");
-				if (event.data.success) {
-					console.log("test4");
-				resolve(event.data.address);
-				} else {
-					console.log("test5");
-				reject(new Error("Wallet connection failed"));
-				}
-			}
-			}
+  return new Promise((resolve, reject) => {
+    // Mesaj cevabını işleyecek fonksiyon
+    function handler(event) {
+      const data = event.data;
 
-			window.addEventListener("message", handler);
-			window.parent.postMessage({ type: "CONNECT_WALLET" }, "*");
-		});
-		}
+      // Doğru türde cevap geldiyse işlem yap
+      if (data?.type === "CONNECT_WALLET_RESULT") {
+        window.removeEventListener("message", handler); // Temizle
+        console.log("[Game] CONNECT_WALLET_RESULT received", data);
+
+        if (data.success && data.address) {
+          resolve(data.address);
+        } else {
+          reject(new Error("Wallet connection failed 111"));
+        }
+      }
+    }
+
+    // Cevapları dinle
+    window.addEventListener("message", handler);
+
+    // Next.js app'e mesaj gönder → “Bağlan cüzdana”
+    console.log("[Game] Sending CONNECT_WALLET request to parent");
+    window.parent.postMessage({ type: "CONNECT_WALLET" }, "*");
+  });
+}
+
 
 
 
