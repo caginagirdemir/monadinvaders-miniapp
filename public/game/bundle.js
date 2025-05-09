@@ -97,6 +97,25 @@
 	  ];
 	  
 
+	  function sendScore(score) {
+			return new Promise((resolve, reject) => {
+				function handler(event) {
+				if (event.data?.type === "SUBMIT_SCORE_RESULT") {
+					window.removeEventListener("message", handler);
+					if (event.data.success) {
+					resolve(event.data.txHash);
+					} else {
+					reject(new Error("Submit failed"));
+					}
+				}
+				}
+
+				window.addEventListener("message", handler);
+				window.parent.postMessage({ type: "SUBMIT_SCORE", score }, "*");
+			});
+			}
+
+
 	  reloadButton.addEventListener('click', () => {
 		/*if (!window.ethereum) {
 			alert("Metamask not installed!");
@@ -108,9 +127,7 @@
 			console.error("Score submit error:", err);
 			alert("Score submit error!");
 		}*/
-		console.log("test11")
-		window.parent.postMessage({ type: "SUBMIT_SCORE", score: totalScore }, "*");
-		console.log("test112")
+		sendScore(totalScore);
 	  });
 
 
@@ -231,8 +248,8 @@
 	
 	  playGameButton.addEventListener("click", async () => {
 			try {
-				const address = await requestWalletConnection();
-				console.log("✅ Connected wallet:", address);
+				//const address = await requestWalletConnection();
+				//console.log("✅ Connected wallet:", address);
 
 				
 			  //await switchToMonadTestnet();
@@ -242,7 +259,7 @@
 
 				
 				gameView = new GameView(ctx, canvasSize, signer);
-			gameView.welcome();
+				gameView.welcome();
 
 
 			}catch (error) {

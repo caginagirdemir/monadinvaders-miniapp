@@ -18,51 +18,41 @@ const Demo = dynamic(() => import("@/components/Home"), {
 
 declare global {
   interface Window {
-    connectFromIframe?: () => Promise<string>;
-    submitScoreFromIframe?: (score: number) => void;
+    submitScoreFromIframe?: (score: number) => Promise<string>;
   }
 }
 
+
 export default function Home() {
   const { context } = useMiniAppContext();
-
 
   useEffect(() => {
     const handler = (event: MessageEvent) => {
       console.log(event.data?.type);
 
-      if (event.data?.type === "CONNECT_WALLET") {
-        if (typeof window.connectFromIframe === "function") {
+      if (event.data?.type === "SUBMIT_SCORE") {
+        const score = Number(event.data.score);
+        if (
+          typeof score === "number" &&
+          !Number.isNaN(score) &&
+          typeof window.submitScoreFromIframe === "function"
+        ) {
           window
-            .connectFromIframe()
-            ?.then((address) => {
+            .submitScoreFromIframe(score)
+            .then((txHash) => {
               (event.source as Window).postMessage(
-                { type: "CONNECT_WALLET_RESULT", success: !!address, address },
+                { type: "SUBMIT_SCORE_RESULT", success: true, txHash },
                 "*"
               );
             })
-            .catch(() => {
+            .catch((err) => {
+              console.error("submitScoreFromIframe failed:", err);
               (event.source as Window).postMessage(
-                { type: "CONNECT_WALLET_RESULT", success: false },
+                { type: "SUBMIT_SCORE_RESULT", success: false },
                 "*"
               );
             });
         }
-      }
-
-
-      if(event.data?.type === "SUBMIT_SCORE")
-      {
-        console.log("test113")
-          const score = Number(event.data.score);
-          if (
-          typeof score === "number" &&
-          !Number.isNaN(score) &&
-          typeof window.submitScoreFromIframe === "function"
-          ) {
-            console.log("test4")
-            window.submitScoreFromIframe(score);
-          }
       }
     };
 
@@ -70,11 +60,10 @@ export default function Home() {
     return () => window.removeEventListener("message", handler);
   }, []);
 
-
   return (
     <div style={{ overflowY: "hidden", height: "100vh" }}>
       <SafeAreaContainer insets={context?.client.safeAreaInsets}>
-          <IframeGame />
+        <IframeGame />
         <WalletActions />
       </SafeAreaContainer>
     </div>

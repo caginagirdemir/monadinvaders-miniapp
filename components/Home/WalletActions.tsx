@@ -13,8 +13,7 @@ import {
 } from "wagmi";
 import { farcasterFrame } from "@farcaster/frame-wagmi-connector";
 import { useEffect } from "react";
-import { getWalletClient } from "wagmi/actions";
-import { config } from "@/lib/wagmi";
+
 
 export function WalletActions() {
   const { isEthProviderAvailable } = useMiniAppContext();
@@ -44,78 +43,57 @@ export function WalletActions() {
     });
   }
 
-  async function submitScoreHandler(score: number) {
-  if (!isConnected) {
-    alert("Wallet not connected");
-    return;
-  }
+useEffect(() => {
+  if (typeof window !== "undefined") {
+    window.submitScoreFromIframe = async (score: number): Promise<string> => {
+      if (!isEthProviderAvailable) {
+        throw new Error("Ethereum provider not available");
+      }
 
-  try {
-    const walletClient = await getWalletClient(config, {
-      account: address!,
-      chainId: chainId!,
-    });
-    if (!walletClient) {
-      alert("Wallet client not available");
-      return;
-    }
-
-    if (chainId !== monadTestnet.id) {
-      alert("Please switch to Monad Testnet");
-      return;
-    }
-
-    const txHash = await walletClient.writeContract({
-      address: CONTRACT_ADDRESS,
-      abi: ABI as Abi,
-      functionName: "submitScore",
-      args: [score],
-    });
-
-    alert(`✅ Tx sent: ${txHash}`);
-  } catch (error: any) {
-    console.error("submitScore error:", error);
-    alert("❌ Submit failed: " + error.message);
-  }
-}
-
-
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      // connect wallet from iframe
-      window.connectFromIframe = async () => {
-        if (!isEthProviderAvailable) {
-          throw new Error("Ethereum provider not available");
-        }
+      if (!isConnected) {
         try {
           const result = await connectAsync({ connector: farcasterFrame() });
-
           if (chainId !== monadTestnet.id) {
             await switchChain({ chainId: monadTestnet.id });
           }
-          return result.accounts?.[0] ?? "";
         } catch (err) {
-          console.error("connectFromIframe error:", err); 
+          console.error("Wallet connect error:", err);
           throw new Error("Wallet connection failed");
         }
-      };
+      }
 
-      // submit score from iframe
-      window.submitScoreFromIframe = (score: number) => {
-        if (isEthProviderAvailable) {
-          console.log("test5")
-          if (chainId !== monadTestnet.id) {
-            switchChain({ chainId: monadTestnet.id });
-          }
-          console.log("test6")
-          submitScoreHandler(score);
-          console.log("test7")
-        } else {
-          alert("Ethereum provider not available");
-        }
-      };
-    }
-  }, [connectAsync, isConnected, isEthProviderAvailable, chainId, switchChain]);
+      if (!walletClient) {
+        throw new Error("Wallet client not available");
+      }
+
+      if (chainId !== monadTestnet.id) {
+        await switchChain({ chainId: monadTestnet.id });
+      }
+
+      try {
+        const txHash = await walletClient.writeContract({
+          address: CONTRACT_ADDRESS,
+          abi: ABI as Abi,
+          functionName: "submitScore",
+          args: [score],
+        });
+        console.log("TX SENT", txHash);
+        return txHash;
+      } catch (error: any) {
+        console.error("submitScore error:", error);
+        throw new Error("Submit failed: " + error.message);
+      }
+    };
+  }
+}, [
+  isConnected,
+  connectAsync,
+  isEthProviderAvailable,
+  chainId,
+  switchChain,
+  walletClient,
+]);
+
 
   return (
     <></>
