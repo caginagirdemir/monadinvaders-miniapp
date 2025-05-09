@@ -13,6 +13,8 @@ import {
 } from "wagmi";
 import { farcasterFrame } from "@farcaster/frame-wagmi-connector";
 import { useEffect } from "react";
+import { getWalletClient } from "wagmi/actions";
+import { config } from "@/lib/wagmi";
 
 export function WalletActions() {
   const { isEthProviderAvailable } = useMiniAppContext();
@@ -43,38 +45,40 @@ export function WalletActions() {
   }
 
   async function submitScoreHandler(score: number) {
-    console.log("submitScoreHandler SCORE:", score);
-    console.log("walletClient:", walletClient);
-
-      if (!isConnected) {
-        alert("Wallet not connected");
-        return;
-      }
-      console.log("test8")
-    try {
-      if (!walletClient) {
-        alert("Wallet client not available");
-        return;
-      }
-
-      if (chainId !== monadTestnet.id) {
-        alert("Please switch to Monad Testnet");
-        return;
-      }
-console.log("test9")
-      const txHash = await walletClient.writeContract({
-        address: CONTRACT_ADDRESS,
-        abi: ABI as Abi,
-        functionName: "submitScore",
-        args: [score],
-      });
-      console.log("TX SENT", txHash);
-      alert(`✅ Tx sent: ${txHash}`);
-    } catch (error: any) {
-      console.error("submitScore error:", error);
-      alert("❌ Submit failed: " + error.message);
-    }
+  if (!isConnected) {
+    alert("Wallet not connected");
+    return;
   }
+
+  try {
+    const walletClient = await getWalletClient(config, {
+      account: address!,
+      chainId: chainId!,
+    });
+    if (!walletClient) {
+      alert("Wallet client not available");
+      return;
+    }
+
+    if (chainId !== monadTestnet.id) {
+      alert("Please switch to Monad Testnet");
+      return;
+    }
+
+    const txHash = await walletClient.writeContract({
+      address: CONTRACT_ADDRESS,
+      abi: ABI as Abi,
+      functionName: "submitScore",
+      args: [score],
+    });
+
+    alert(`✅ Tx sent: ${txHash}`);
+  } catch (error: any) {
+    console.error("submitScore error:", error);
+    alert("❌ Submit failed: " + error.message);
+  }
+}
+
 
   useEffect(() => {
     if (typeof window !== "undefined") {

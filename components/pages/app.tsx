@@ -72,9 +72,11 @@ export default function Home() {
 
 
   return (
-    <SafeAreaContainer insets={context?.client.safeAreaInsets}>
-        <IframeGame />
-       <WalletActions />
-    </SafeAreaContainer>
+    <div style={{ overflowY: "hidden", height: "100vh" }}>
+      <SafeAreaContainer insets={context?.client.safeAreaInsets}>
+          <IframeGame />
+        <WalletActions />
+      </SafeAreaContainer>
+    </div>
   );
 }
