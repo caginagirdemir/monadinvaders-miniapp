@@ -88,6 +88,7 @@ export function WalletActions() {
           }
           return result.accounts?.[0] ?? "";
         } catch (err) {
+          console.error("connectFromIframe error:", err); 
           throw new Error("Wallet connection failed");
         }
       };
