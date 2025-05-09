@@ -116,7 +116,7 @@
 			}
 
 
-	  reloadButton.addEventListener('click', () => {
+	  reloadButton.addEventListener('click', async () => {
 		/*if (!window.ethereum) {
 			alert("Metamask not installed!");
 			return;
@@ -127,7 +127,9 @@
 			console.error("Score submit error:", err);
 			alert("Score submit error!");
 		}*/
-		sendScore(totalScore);
+		const result = await sendScore(totalScore);
+		console.log(result);
+		
 	  });
 
 
@@ -263,8 +265,8 @@
 
 
 			}catch (error) {
-				console.error("Wallet connection error:", error);
-				alert("Unsuccessful wallet connection.");
+				console.error("Game start error:", error);
+
 			  }
 
 		menuButton.className        =     '';
