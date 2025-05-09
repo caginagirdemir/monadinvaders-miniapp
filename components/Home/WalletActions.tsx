@@ -1,5 +1,7 @@
+"use client";
+
 import { useMiniAppContext } from "@/hooks/use-miniapp-context";
-import { parseEther } from "viem";
+import { parseEther, Abi } from "viem";
 import { monadTestnet } from "viem/chains";
 import {
   useAccount,
@@ -10,6 +12,8 @@ import {
 } from "wagmi";
 import { farcasterFrame } from "@farcaster/frame-wagmi-connector";
 import { useEffect } from "react";
+import { getWalletClient } from "wagmi/actions";
+import { config } from "@/lib/wagmi"; 
 
 export function WalletActions() {
   const { isEthProviderAvailable } = useMiniAppContext();
@@ -19,6 +23,18 @@ export function WalletActions() {
   const { switchChain } = useSwitchChain();
   const { connect } = useConnect();
 
+  const CONTRACT_ADDRESS = "0x859643c0aC12BF9A192BC5c0844B5047F046b9D1";
+
+  const ABI = [
+    {
+      inputs: [{ internalType: "uint256", name: "_score", type: "uint256" }],
+      name: "submitScore",
+      outputs: [],
+      stateMutability: "nonpayable",
+      type: "function",
+    },
+  ];
+
   async function sendTransactionHandler() {
     sendTransaction({
       to: "0x7f748f154B6D180D35fA12460C7E4C631e28A9d7",
@@ -26,19 +42,50 @@ export function WalletActions() {
     });
   }
 
+  async function submitScoreHandler(score: number) {
+    try {
+      const walletClient = await getWalletClient(config);
 
-useEffect(() => {
-  if (typeof window !== "undefined") {
-    window.connectFromIframe = () => {
-      if (isEthProviderAvailable) {
-        connect({ connector: farcasterFrame() });
-      } else {
-        alert("Ethereum provider not available");
+      if (!walletClient) {
+        alert("Wallet client not available");
+        return;
       }
-    };
+
+      if (chainId !== monadTestnet.id) {
+        alert("Please switch to Monad Testnet");
+        return;
+      }
+
+      const txHash = await walletClient.writeContract({
+        address: CONTRACT_ADDRESS,
+        abi: ABI as Abi,
+        functionName: "submitScore",
+        args: [score],
+      });
+
+      alert(`✅ Tx sent: ${txHash}`);
+    } catch (error: any) {
+      console.error("submitScore error:", error);
+      alert("❌ Submit failed: " + error.message);
+    }
   }
-}, [connect, isEthProviderAvailable]);
-  
+
+  // 🧠 iframe ile bağlantı ve submit trigger
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      window.connectFromIframe = () => {
+        if (isEthProviderAvailable) {
+          connect({ connector: farcasterFrame() });
+          if (chainId !== monadTestnet.id) {
+            switchChain({ chainId: monadTestnet.id });
+          }
+        } else {
+          alert("Ethereum provider not available");
+        }
+      };
+
+    }
+  }, [connect, isConnected, isEthProviderAvailable, chainId]);
 
   return (
     <div className="space-y-4 border border-[#333] rounded-md p-4">
@@ -69,19 +116,12 @@ useEffect(() => {
                 >
                   Send Transaction
                 </button>
-                {hash && (
-                  <button
-                    className="bg-white text-black rounded-md p-2 text-sm"
-                    onClick={() =>
-                      window.open(
-                        `https://testnet.monadexplorer.com/tx/${hash}`,
-                        "_blank"
-                      )
-                    }
-                  >
-                    View Transaction
-                  </button>
-                )}
+                <button
+                  className="bg-white text-black rounded-md p-2 text-sm"
+                  onClick={() => submitScoreHandler(1234)} // test skoru
+                >
+                  Submit Score: 1234
+                </button>
               </div>
             ) : (
               <button
@@ -99,21 +139,17 @@ useEffect(() => {
               Disconnect Wallet
             </button>
           </div>
+        ) : isEthProviderAvailable ? (
+          <button
+            className="bg-white text-black w-full rounded-md p-2 text-sm"
+            onClick={() => connect({ connector: farcasterFrame() })}
+          >
+            Connect Wallet
+          </button>
         ) : (
-          isEthProviderAvailable ?
-          (
-            <button
-              className="bg-white text-black w-full rounded-md p-2 text-sm"
-              onClick={() => connect({ connector: farcasterFrame() })}
-            >
-              Connect Wallet
-            </button>
-          ) :
-          (
-            <p className="text-sm text-left">
-              Wallet connection only via Warpcast
-            </p>
-          )
+          <p className="text-sm text-left">
+            Wallet connection only via Warpcast
+          </p>
         )}
       </div>
     </div>

@@ -19,6 +19,7 @@ const Demo = dynamic(() => import("@/components/Home"), {
 declare global {
   interface Window {
     connectFromIframe?: () => void;
+    submitScoreFromIframe?: () => void;
   }
 }
 
