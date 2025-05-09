@@ -4,6 +4,8 @@ import { SafeAreaContainer } from "@/components/safe-area-container";
 import { useMiniAppContext } from "@/hooks/use-miniapp-context";
 import dynamic from "next/dynamic";
 import IframeGame from "@/components/IframeGame";
+import { FarcasterActions } from "@/components/Home/FarcasterActions";
+import { User } from "@/components/Home/User";
 import { WalletActions } from "@/components/Home/WalletActions";
 import { useEffect } from "react";
 
@@ -39,6 +41,8 @@ export default function Home() {
 
   return (
     <SafeAreaContainer insets={context?.client.safeAreaInsets}>
+        <User />
+        <FarcasterActions />
        <WalletActions />
     </SafeAreaContainer>
   );
