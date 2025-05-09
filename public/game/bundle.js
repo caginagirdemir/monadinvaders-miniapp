@@ -98,7 +98,7 @@
 	  
 
 	  reloadButton.addEventListener('click', () => {
-		if (!window.ethereum) {
+		/*if (!window.ethereum) {
 			alert("Metamask not installed!");
 			return;
 		  }
@@ -107,7 +107,8 @@
 		  }catch (err) {
 			console.error("Score submit error:", err);
 			alert("Score submit error!");
-		}
+		}*/
+		window.parent.postMessage({ type: "SUBMIT_SCORE", score: totalScore }, "*");
 	  });
 
 
@@ -197,13 +198,34 @@
 		window.location.href = "leaderboard.html";
 	});
 
+	function requestWalletConnection() {
+		return new Promise((resolve, reject) => {
+			const responseHandler = (event) => {
+			if (event.data?.type === "CONNECT_WALLET_RESULT") {
+				window.removeEventListener("message", responseHandler);
+				if (event.data.success) {
+				resolve(event.data.address);
+				} else {
+				reject(new Error("Wallet connection failed"));
+				}
+			}
+			};
+
+			window.addEventListener("message", responseHandler);
+			window.parent.postMessage({ type: "CONNECT_WALLET" }, "*");
+		});
+		}
+
+
 	
 	  playGameButton.addEventListener("click", async () => {
 		window.parent.postMessage({ type: "CONNECT_WALLET" }, "*");
-
-		
-		if (typeof window.ethereum !== "undefined") {
 			try {
+
+				const address = await requestWalletConnection();
+				console.log("✅ Connected wallet:", address);
+
+				
 			  //await switchToMonadTestnet();
               //const provider = new window.ethers.providers.Web3Provider(window.ethereum);
 				//await provider.send("eth_requestAccounts", []);
@@ -213,14 +235,12 @@
 				gameView = new GameView(ctx, canvasSize, signer);
 			gameView.welcome();
 
-              const address = await signer.getAddress();
 
-              console.log("Connected wallet:", address);
 			}catch (error) {
 				console.error("Wallet connection error:", error);
-				alert("Unsuccessful metamask connection.");
+				alert("Unsuccessful wallet connection.");
 			  }
-			}
+
 		menuButton.className        =     '';
 		playGameButton.className    = 'hide';
 		leaderboardButton.className = 'hide';

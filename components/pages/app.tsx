@@ -18,20 +18,48 @@ const Demo = dynamic(() => import("@/components/Home"), {
 
 declare global {
   interface Window {
-    connectFromIframe?: () => void;
-    submitScoreFromIframe?: () => void;
+    connectFromIframe?: () => Promise<string>;
+    submitScoreFromIframe?: (score: number) => void;
   }
 }
 
 export default function Home() {
   const { context } = useMiniAppContext();
+
+
   useEffect(() => {
     const handler = (event: MessageEvent) => {
       console.log(event.data?.type);
+
       if (event.data?.type === "CONNECT_WALLET") {
         if (typeof window.connectFromIframe === "function") {
-          window.connectFromIframe();
+          window
+            .connectFromIframe()
+            ?.then((address) => {
+              (event.source as Window).postMessage(
+                { type: "CONNECT_WALLET_RESULT", success: false },
+                "*"
+              );
+            })
+            .catch(() => {
+              (event.source as Window).postMessage(
+                { type: "CONNECT_WALLET_RESULT", success: false },
+                "*"
+              );
+
+            });
         }
+      }
+      else if(event.data?.type === "SUBMIT_SCORE")
+      {
+          const score = Number(event.data.score);
+          if (
+          typeof score === "number" &&
+          !Number.isNaN(score) &&
+          typeof window.submitScoreFromIframe === "function"
+          ) {
+            window.submitScoreFromIframe(score);
+          }
       }
     };
 
@@ -42,8 +70,7 @@ export default function Home() {
 
   return (
     <SafeAreaContainer insets={context?.client.safeAreaInsets}>
-        <User />
-        <FarcasterActions />
+        <IframeGame />
        <WalletActions />
     </SafeAreaContainer>
   );
