@@ -49,14 +49,18 @@ export default function Home() {
             });
         }
       }
-      else if(event.data?.type === "SUBMIT_SCORE")
+
+
+      if(event.data?.type === "SUBMIT_SCORE")
       {
+        console.log("test113")
           const score = Number(event.data.score);
           if (
           typeof score === "number" &&
           !Number.isNaN(score) &&
           typeof window.submitScoreFromIframe === "function"
           ) {
+            console.log("test4")
             window.submitScoreFromIframe(score);
           }
       }

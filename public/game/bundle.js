@@ -108,7 +108,9 @@
 			console.error("Score submit error:", err);
 			alert("Score submit error!");
 		}*/
+		console.log("test11")
 		window.parent.postMessage({ type: "SUBMIT_SCORE", score: totalScore }, "*");
+		console.log("test112")
 	  });
 
 
