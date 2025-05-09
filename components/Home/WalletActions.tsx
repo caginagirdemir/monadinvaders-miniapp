@@ -13,7 +13,7 @@ import {
 } from "wagmi";
 import { farcasterFrame } from "@farcaster/frame-wagmi-connector";
 import { useEffect } from "react";
-
+import { config } from "@/lib/wagmi";
 
 export function WalletActions() {
   const { isEthProviderAvailable } = useMiniAppContext();
@@ -55,6 +55,12 @@ useEffect(() => {
           const result = await connectAsync({ connector: farcasterFrame() });
           if (chainId !== monadTestnet.id) {
             await switchChain({ chainId: monadTestnet.id });
+
+            // chain değişti, client yeniden alınmalı
+            walletClient = await getWalletClient(config, {
+              account: address!,
+              chainId: monadTestnet.id,
+            });
           }
         } catch (err) {
           console.error("Wallet connect error:", err);
