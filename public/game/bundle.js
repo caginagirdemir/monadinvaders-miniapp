@@ -128,8 +128,7 @@
 			alert("Score submit error!");
 		}*/
 		const result = await sendScore(totalScore);
-		console.log(result);
-		
+		location.reload();
 	  });
 
 

@@ -13,6 +13,7 @@ import {
 } from "wagmi";
 import { farcasterFrame } from "@farcaster/frame-wagmi-connector";
 import { useEffect } from "react";
+import { getWalletClient } from "wagmi/actions";
 import { config } from "@/lib/wagmi";
 
 export function WalletActions() {
@@ -45,51 +46,45 @@ export function WalletActions() {
 
 useEffect(() => {
   if (typeof window !== "undefined") {
+    
     window.submitScoreFromIframe = async (score: number): Promise<string> => {
       if (!isEthProviderAvailable) {
         throw new Error("Ethereum provider not available");
       }
 
-      if (!isConnected) {
-        try {
-          const result = await connectAsync({ connector: farcasterFrame() });
-          if (chainId !== monadTestnet.id) {
-            await switchChain({ chainId: monadTestnet.id });
-
-            // chain değişti, client yeniden alınmalı
-            walletClient = await getWalletClient(config, {
-              account: address!,
-              chainId: monadTestnet.id,
-            });
-          }
-        } catch (err) {
-          console.error("Wallet connect error:", err);
-          throw new Error("Wallet connection failed");
-        }
-      }
-
-      if (!walletClient) {
-        throw new Error("Wallet client not available");
-      }
-
-      if (chainId !== monadTestnet.id) {
-        await switchChain({ chainId: monadTestnet.id });
-      }
-
       try {
-        const txHash = await walletClient.writeContract({
+        // Cüzdan bağlı değilse bağlan
+        if (!isConnected) {
+          await connectAsync({ connector: farcasterFrame() });
+        }
+
+        // Chain yanlışsa değiştir
+        if (chainId !== monadTestnet.id) {
+          await switchChain({ chainId: monadTestnet.id });
+        }
+
+        // Doğru client'i al
+        const freshClient = await getWalletClient(config, {
+          account: address!,
+          chainId: monadTestnet.id,
+        });
+
+        // Kontrat çağrısı
+        const txHash = await freshClient.writeContract({
           address: CONTRACT_ADDRESS,
           abi: ABI as Abi,
           functionName: "submitScore",
           args: [score],
         });
-        console.log("TX SENT", txHash);
+
         return txHash;
-      } catch (error: any) {
-        console.error("submitScore error:", error);
-        throw new Error("Submit failed: " + error.message);
+      } catch (err: any) {
+        console.error("submitScore error:", err);
+        throw new Error("Submit failed: " + err.message);
       }
     };
+
+
   }
 }, [
   isConnected,
