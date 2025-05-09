@@ -220,12 +220,11 @@
 
 	
 	  playGameButton.addEventListener("click", async () => {
-		window.parent.postMessage({ type: "CONNECT_WALLET" }, "*");
 			try {
-
+				console.log("test1");
 				const address = await requestWalletConnection();
 				console.log("✅ Connected wallet:", address);
-
+console.log("test2");
 				
 			  //await switchToMonadTestnet();
               //const provider = new window.ethers.providers.Web3Provider(window.ethereum);
