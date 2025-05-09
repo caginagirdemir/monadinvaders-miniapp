@@ -43,11 +43,12 @@ export function WalletActions() {
   }
 
   async function submitScoreHandler(score: number) {
-    if (!isConnected) {
-      alert("Wallet not connected");
-      return;
-    }
-
+    console.log("test8")
+      if (!isConnected) {
+        alert("Wallet not connected");
+        return;
+      }
+      console.log("test8")
     try {
       if (!walletClient) {
         alert("Wallet client not available");
@@ -58,16 +59,17 @@ export function WalletActions() {
         alert("Please switch to Monad Testnet");
         return;
       }
-
+console.log("test9")
       const txHash = await walletClient.writeContract({
         address: CONTRACT_ADDRESS,
         abi: ABI as Abi,
         functionName: "submitScore",
         args: [score],
       });
-
+console.log("test10")
       alert(`✅ Tx sent: ${txHash}`);
     } catch (error: any) {
+      console.log("test11")
       console.error("submitScore error:", error);
       alert("❌ Submit failed: " + error.message);
     }
@@ -102,8 +104,8 @@ export function WalletActions() {
           }
           console.log("test6")
           submitScoreHandler(score);
-        } else {
           console.log("test7")
+        } else {
           alert("Ethereum provider not available");
         }
       };
