@@ -107,6 +107,6 @@ export function WalletActions() {
   }, [connectAsync, isConnected, isEthProviderAvailable, chainId, switchChain]);
 
   return (
-    <div></div>
+    <></>
   );
 }

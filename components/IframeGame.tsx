@@ -11,6 +11,7 @@ export default function IframeGame() {
         backgroundColor: "black",
       }}
       title="Game"
+      sandbox="allow-scripts allow-same-origin allow-modals"
     />
   );
 }

@@ -198,23 +198,24 @@
 		window.location.href = "leaderboard.html";
 	});
 
-	function requestWalletConnection() {
+	async function requestWalletConnection() {
 		return new Promise((resolve, reject) => {
-			const responseHandler = (event) => {
+			function handler(event) {
 			if (event.data?.type === "CONNECT_WALLET_RESULT") {
-				window.removeEventListener("message", responseHandler);
+				window.removeEventListener("message", handler);
 				if (event.data.success) {
 				resolve(event.data.address);
 				} else {
 				reject(new Error("Wallet connection failed"));
 				}
 			}
-			};
+			}
 
-			window.addEventListener("message", responseHandler);
+			window.addEventListener("message", handler);
 			window.parent.postMessage({ type: "CONNECT_WALLET" }, "*");
 		});
 		}
+
 
 
 	
