@@ -199,32 +199,29 @@
 	});
 
 	async function requestWalletConnection() {
-  return new Promise((resolve, reject) => {
-    // Mesaj cevabını işleyecek fonksiyon
-    function handler(event) {
-      const data = event.data;
+		return new Promise((resolve, reject) => {
+			function handler(event) {
+			const data = event.data;
 
-      // Doğru türde cevap geldiyse işlem yap
-      if (data?.type === "CONNECT_WALLET_RESULT") {
-        window.removeEventListener("message", handler); // Temizle
-        console.log("[Game] CONNECT_WALLET_RESULT received", data);
+			// Doğru türde cevap geldiyse işlem yap
+			if (data?.type === "CONNECT_WALLET_RESULT") {
+				window.removeEventListener("message", handler); // Temizle
+				console.log("[Game] CONNECT_WALLET_RESULT received", data);
 
-        if (data.success && data.address) {
-          resolve(data.address);
-        } else {
-          reject(new Error("Wallet connection failed 111"));
-        }
-      }
-    }
+				if (data.success && data.address) {
+				resolve(data.address);
+				} else {
+				reject(new Error("Wallet connection failed2"));
+				}
+			}
+			}
 
-    // Cevapları dinle
-    window.addEventListener("message", handler);
+			window.addEventListener("message", handler);
 
-    // Next.js app'e mesaj gönder → “Bağlan cüzdana”
-    console.log("[Game] Sending CONNECT_WALLET request to parent");
-    window.parent.postMessage({ type: "CONNECT_WALLET" }, "*");
-  });
-}
+			console.log("[Game] Sending CONNECT_WALLET request to parent");
+			window.parent.postMessage({ type: "CONNECT_WALLET" }, "*");
+		});
+		}
 
 
 
@@ -232,7 +229,6 @@
 	
 	  playGameButton.addEventListener("click", async () => {
 			try {
-				console.log("test1");
 				const address = await requestWalletConnection();
 				console.log("✅ Connected wallet:", address);
 
