@@ -38,44 +38,59 @@ export function WalletActions() {
   useEffect(() => {
     if (typeof window !== "undefined") {
       window.submitScoreFromIframe = async (score: number): Promise<string> => {
-        if (!isEthProviderAvailable) {
-          throw new Error("Ethereum provider not available");
-        }
+  if (!isEthProviderAvailable) {
+    throw new Error("Ethereum provider not available");
+  }
 
-        let walletAddress = address;
-        let client;
+  let walletAddress = address;
+  let client;
 
-        if (!isConnected) {
-          const result = await connectAsync({ connector: farcasterFrame() });
-          walletAddress = result.accounts?.[0];
-        }
+  try {
+    // Cüzdan bağlı değilse bağlan
+    if (!isConnected) {
+      const result = await connectAsync({ connector: farcasterFrame() });
+      walletAddress = result.accounts?.[0];
 
-        if (!walletAddress) {
-          throw new Error("No wallet address found");
-        }
+      // Zincir yanlışsa değiştir
+      if (result.chainId !== monadTestnet.id) {
+        await switchChain({ chainId: monadTestnet.id });
+      }
 
-        if (chainId !== monadTestnet.id) {
-          await switchChain({ chainId: monadTestnet.id });
-        }
+      // Bağlantıdan sonra yeniden wallet client al
+      client = await getWalletClient(config, {
+        account: walletAddress!,
+        chainId: monadTestnet.id,
+      });
+    } else {
+      // Bağlıysa ama zincir yanlışsa
+      if (chainId !== monadTestnet.id) {
+        await switchChain({ chainId: monadTestnet.id });
+      }
 
-        client = await getWalletClient(config, {
-          account: walletAddress,
-          chainId: monadTestnet.id,
-        });
+      client = await getWalletClient(config, {
+        account: walletAddress!,
+        chainId: monadTestnet.id,
+      });
+    }
 
-        if (!client) {
-          throw new Error("Wallet client not available");
-        }
+    if (!client) {
+      throw new Error("Wallet client not available");
+    }
 
-        const txHash = await client.writeContract({
-          address: CONTRACT_ADDRESS,
-          abi: ABI,
-          functionName: "submitScore",
-          args: [score],
-        });
+    const txHash = await client.writeContract({
+      address: CONTRACT_ADDRESS,
+      abi: ABI,
+      functionName: "submitScore",
+      args: [score],
+    });
 
-        return txHash;
-      };
+    return txHash;
+  } catch (err: any) {
+    console.error("submitScore error:", err);
+    throw new Error("Submit failed: " + err.message);
+  }
+};
+
     }
   }, [
     isConnected,
