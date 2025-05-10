@@ -13,6 +13,8 @@ import {
 } from "wagmi";
 import { farcasterFrame } from "@farcaster/frame-wagmi-connector";
 import { useEffect } from "react";
+import { getWalletClient } from "wagmi/actions";
+import { config } from "@/lib/wagmi";
 
 export function WalletActions() {
   const { isEthProviderAvailable } = useMiniAppContext();
@@ -22,6 +24,7 @@ export function WalletActions() {
   const { switchChain } = useSwitchChain();
   const { connectAsync } = useConnect();
   const { data: walletClient } = useWalletClient();
+  
 
   const CONTRACT_ADDRESS = "0x859643c0aC12BF9A192BC5c0844B5047F046b9D1";
 
@@ -75,34 +78,46 @@ export function WalletActions() {
 
 useEffect(() => {
   if (typeof window !== "undefined") {
-    window.submitScoreFromIframe = async (score: number) => {
+    window.submitScoreFromIframe = async (score: number): Promise<string> => {
       if (!isEthProviderAvailable) {
         throw new Error("Ethereum provider not available");
       }
 
       try {
+        let accountAddress = address;
+
+        // Eğer bağlı değilse bağlan
         if (!isConnected) {
           const result = await connectAsync({ connector: farcasterFrame() });
-          if (!result.accounts?.[0]) {
+          accountAddress = result.accounts?.[0];
+          if (!accountAddress) {
             throw new Error("No wallet address after connect");
           }
         }
-console.log('Chain ID:', chainId);
+
+        // Chain kontrolü
         if (chainId !== monadTestnet.id) {
           await switchChain({ chainId: monadTestnet.id });
         }
-console.log('Chain ID:', chainId);
-        if (!walletClient) {
+
+        // Doğrudan client al
+        const client = await getWalletClient(config, {
+          account: accountAddress!,
+          chainId: monadTestnet.id,
+        });
+
+
+        if (!client) {
           throw new Error("Wallet client not available");
         }
-console.log('Wallet Client:', walletClient);
-        const txHash = await walletClient.writeContract({
+
+        const txHash = await client.writeContract({
           address: CONTRACT_ADDRESS,
           abi: ABI as Abi,
           functionName: "submitScore",
           args: [score],
         });
-console.log('Wallet Client:', walletClient);
+
         console.log("✅ Transaction sent", txHash);
         return txHash;
       } catch (err: any) {
@@ -117,7 +132,7 @@ console.log('Wallet Client:', walletClient);
   isEthProviderAvailable,
   chainId,
   switchChain,
-  walletClient,
+  address,
 ]);
 
 
