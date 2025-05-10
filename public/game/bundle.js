@@ -438,8 +438,10 @@
 		canvas.remove();
 		const containerElement = document.getElementById('container');
 		document.getElementById('container').style.display = 'none';
+		const score = this.game.score;
 		console.log(score);
-	  	window.parent.postMessage({ type: "SUBMIT_SCORE", score }, "*");
+		window.parent.postMessage({ type: "SUBMIT_SCORE", score }, "*");
+
 	  //document.getElementById('menu-container').className='hide';
 	};
 	
