@@ -416,7 +416,7 @@
 	};
 	
 	GameView.prototype.gameOver = function() {
-		const score = this.game.score;
+		const score = window.totalScore;
   		console.log("[Game] Game Over, Score:", score);
 		this.stop();
 		window.parent.postMessage({ type: "SUBMIT_SCORE", score }, "*");
