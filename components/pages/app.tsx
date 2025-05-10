@@ -1,4 +1,5 @@
-import { SafeAreaContainer } from "@/components/safe-area-container";
+"use client";
+
 import { useMiniAppContext } from "@/hooks/use-miniapp-context";
 import IframeGame from "@/components/IframeGame";
 import { WalletActions } from "@/components/Home/WalletActions";
@@ -10,25 +11,20 @@ declare global {
   }
 }
 
-export default function Home() {
-  const { context } = useMiniAppContext();
+export default function AppPage() {
+  const { isEthProviderAvailable } = useMiniAppContext();
+  const [score, setScore] = useState<number>(0);
   const [showWalletActions, setShowWalletActions] = useState(false);
-  const [scoreToSubmit, setScoreToSubmit] = useState<number | null>(null);
 
   useEffect(() => {
     const handler = (event: MessageEvent) => {
-      console.log(event.data?.type);
-
+      console.log("RAW");
       if (event.data?.type === "SUBMIT_SCORE") {
-        const score = Number(event.data.score);
-        if (
-          typeof score === "number" &&
-          !Number.isNaN(score)
-        ) {
-          console.log("SUBMIT_SCORE triggered", score);
-
-          setScoreToSubmit(score); // Score'u state'e al
-          setShowWalletActions(true); 
+        console.log("SUBMIT_SCORE");
+        const newScore = Number(event.data.score);
+        if (!Number.isNaN(newScore)) {
+          setScore(newScore);
+          setShowWalletActions(true);
         }
       }
     };
@@ -38,11 +34,9 @@ export default function Home() {
   }, []);
 
   return (
-    <SafeAreaContainer insets={context?.client.safeAreaInsets}>
+    <>
       <IframeGame />
-      {showWalletActions && scoreToSubmit !== null && (
-        <WalletActions score={scoreToSubmit} />
-      )}
-    </SafeAreaContainer>
+      {showWalletActions && isEthProviderAvailable && <WalletActions score={score} />}
+    </>
   );
 }
