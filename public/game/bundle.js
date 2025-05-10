@@ -97,25 +97,8 @@
 	  ];
 	  
 
-	  function sendScore(score) {
-			return new Promise((resolve, reject) => {
-				function handler(event) {
-				if (event.data?.type === "SUBMIT_SCORE_RESULT") {
-					window.removeEventListener("message", handler);
-					console.log("[Game] CONNECT_WALLET_RESULT received", data);
-					if (data.success && data.address) {
-						resolve(data.address);
-					} else {
-						reject(new Error("Wallet connection failed"));
-					}
-				}
-				}
-				window.addEventListener("message", handler);
-				console.log("[Game] Sending CONNECT_WALLET request to parent");
-				console.log('Sending score1:', score);
-				window.parent.postMessage({ type: "SUBMIT_SCORE", score }, "*");
-				console.log('Sending score2:', score);
-			});
+	  function submitScore() {
+			console.log(totalScore);
 		}
 
 
@@ -433,9 +416,8 @@
 	};
 	
 	GameView.prototype.gameOver = function() {
+		submitScore();
 		this.stop();
-		const score = this.game.score; // BUNU ÇOK ÜSTE AL
-		console.log("Final Score:", score);
 		window.parent.postMessage({ type: "SUBMIT_SCORE", score }, "*");
 
 		const canvas = document.getElementById('game-canvas');
