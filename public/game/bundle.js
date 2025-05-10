@@ -120,6 +120,9 @@
 
 
 	  reloadButton.addEventListener('click', async () => {
+
+
+
 		/*if (!window.ethereum) {
 			alert("Metamask not installed!");
 			return;
@@ -476,6 +479,9 @@
 	GameView.prototype.gameOver = function() {
 	  this.stop();
 	
+
+	  ///oyunu burada bitir canvas sifirla ve 
+	  //window.parent.postMessage({ type: "SUBMIT_SCORE", score }, "*"); gönder
 	  document.getElementById('menu-container').className='hide';
 	
 	  setTimeout(() => {

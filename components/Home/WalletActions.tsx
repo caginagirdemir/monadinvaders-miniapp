@@ -9,12 +9,11 @@ import {
   useDisconnect,
   useSendTransaction,
   useSwitchChain,
-  useWalletClient 
 } from "wagmi";
 import { farcasterFrame } from "@farcaster/frame-wagmi-connector";
 import { useEffect } from "react";
 import { getWalletClient } from "wagmi/actions";
-import { config } from "@/lib/wagmi";
+import { config } from "@/lib/wagmi"; // 🧠 config'in yolunu kontrol et!
 
 export function WalletActions() {
   const { isEthProviderAvailable } = useMiniAppContext();
@@ -43,39 +42,37 @@ export function WalletActions() {
     });
   }
 
-async function submitScoreHandler(score: number) {
-  try {
-    const walletClient = await getWalletClient(config); // config burada gerekli!
+  async function submitScoreHandler(score: number) {
+    try {
+      const walletClient = await getWalletClient(config);
 
-    if (!walletClient) {
-      alert("Wallet client not available");
-      return;
+      if (!walletClient) {
+        alert("Wallet client not available");
+        return;
+      }
+
+      if (chainId !== monadTestnet.id) {
+        alert("Please switch to Monad Testnet");
+        return;
+      }
+
+      const txHash = await walletClient.writeContract({
+        address: CONTRACT_ADDRESS,
+        abi: ABI as Abi,
+        functionName: "submitScore",
+        args: [score],
+      });
+
+      alert(`✅ Tx sent: ${txHash}`);
+    } catch (error: any) {
+      console.error("submitScore error:", error);
+      alert("❌ Submit failed: " + error.message);
     }
-
-    if (chainId !== monadTestnet.id) {
-      alert("Please switch to Monad Testnet");
-      return;
-    }
-
-    const txHash = await walletClient.writeContract({
-      address: CONTRACT_ADDRESS,
-      abi: ABI as Abi,
-      functionName: "submitScore",
-      args: [score],
-    });
-
-    alert(`✅ Tx sent: ${txHash}`);
-  } catch (error: any) {
-    console.error("submitScore error:", error);
-    alert("❌ Submit failed: " + error.message);
   }
-}
+
 
 
   return (
-
-
-
     <div className="space-y-4 border border-[#333] rounded-md p-4">
       <h2 className="text-xl font-bold text-left">sdk.wallet.ethProvider</h2>
       <div className="flex flex-row space-x-4 justify-start items-start">
@@ -106,24 +103,10 @@ async function submitScoreHandler(score: number) {
                 </button>
                 <button
                   className="bg-white text-black rounded-md p-2 text-sm"
-                  onClick={() => submitScoreHandler(1234)} // test değeri
+                  onClick={() => submitScoreHandler(1234)} // test skoru
                 >
                   Submit Score: 1234
                 </button>
-
-                {hash && (
-                  <button
-                    className="bg-white text-black rounded-md p-2 text-sm"
-                    onClick={() =>
-                      window.open(
-                        `https://testnet.monadexplorer.com/tx/${hash}`,
-                        "_blank"
-                      )
-                    }
-                  >
-                    View Transaction
-                  </button>
-                )}
               </div>
             ) : (
               <button
@@ -141,21 +124,17 @@ async function submitScoreHandler(score: number) {
               Disconnect Wallet
             </button>
           </div>
+        ) : isEthProviderAvailable ? (
+          <button
+            className="bg-white text-black w-full rounded-md p-2 text-sm"
+            onClick={() => connect({ connector: farcasterFrame() })}
+          >
+            Connect Wallet
+          </button>
         ) : (
-          isEthProviderAvailable ?
-          (
-            <button
-              className="bg-white text-black w-full rounded-md p-2 text-sm"
-              onClick={() => connect({ connector: farcasterFrame() })}
-            >
-              Connect Wallet
-            </button>
-          ) :
-          (
-            <p className="text-sm text-left">
-              Wallet connection only via Warpcast
-            </p>
-          )
+          <p className="text-sm text-left">
+            Wallet connection only via Warpcast
+          </p>
         )}
       </div>
     </div>
