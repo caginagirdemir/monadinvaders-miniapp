@@ -288,7 +288,7 @@ body {
 
 #grunt-1 {
   position: absolute;
-  left: 135px;
+  left: 125px;
   bottom: 380px;
 
   height: 25px;
@@ -297,7 +297,7 @@ body {
 
 #soldier-1 {
   position: absolute;
-  left: 137px;
+  left: 127px;
   bottom: 350px;
 
   height: 20px;
@@ -306,7 +306,7 @@ body {
 
 #invader-1 {
   position: absolute;
-  left: 137px;
+  left: 127px;
   bottom: 325px;
 
   height: 20px;
@@ -315,7 +315,7 @@ body {
 
 #ufo {
   position: absolute;
-  left: 130px;
+  left: 120px;
   bottom: 297px;
 
   height: 20px;
