@@ -78,65 +78,65 @@ export function WalletActions() {
 
 useEffect(() => {
   if (typeof window !== "undefined") {
-    window.submitScoreFromIframe = async (score: number) => {
+    window.submitScoreFromIframe = async (score: number): Promise<string> => {
       console.log("SUBMIT_SCORE triggered", score);
-
+      
       if (!isEthProviderAvailable) {
         throw new Error("Ethereum provider not available");
       }
 
-      try {
-        let walletAddress = address;
-        let client = walletClient;
+      let walletAddress = address;
+      let client = walletClient;
 
-        if (!isConnected) {
-          console.log("Bağlı değil. Cüzdan bağlanıyor...");
-          const result = await connectAsync({ connector: farcasterFrame() });
-          walletAddress = result.accounts?.[0];
-          console.log("Cüzdan bağlandı:", walletAddress);
-          if (!walletAddress) throw new Error("No wallet address after connect");
-        }
-
-        console.log("Current chainId:", chainId);
-
-        if (chainId !== monadTestnet.id) {
-          console.log("Switching chain...");
-          await switchChain({ chainId: monadTestnet.id });
-
-          // Zincir değiştikten sonra biraz bekle ve tekrar bağlan
-          await new Promise((res) => setTimeout(res, 500));
-          const reconnected = await connectAsync({ connector: farcasterFrame() });
-          walletAddress = reconnected.accounts?.[0];
-          if (!walletAddress) throw new Error("Reconnect failed after chain switch");
-
-          console.log("Zincir değişti, tekrar bağlanıldı:", walletAddress);
-
-          client = await getWalletClient(config, {
-            account: walletAddress,
-            chainId: monadTestnet.id,
-          });
-
-          if (!client) throw new Error("Wallet client not available after reconnect");
-        }
-
-        if (!client) {
-          throw new Error("Wallet client not available");
-        }
-
-        console.log("İşlem gönderiliyor...");
-        const txHash = await client.writeContract({
-          address: CONTRACT_ADDRESS,
-          abi: ABI as Abi,
-          functionName: "submitScore",
-          args: [score],
-        });
-
-        console.log("✅ Transaction sent:", txHash);
-        return txHash;
-      } catch (err: any) {
-        console.error("submitScoreFromIframe failed:", err);
-        throw new Error("Submit failed: " + err.message);
+      // Connect wallet only if not connected
+      if (!isConnected) {
+        console.log("Bağlı değil. Cüzdan bağlanıyor...");
+        const result = await connectAsync({ connector: farcasterFrame() });
+        walletAddress = result.accounts?.[0];
+        console.log("Cüzdan bağlandı:", walletAddress);
+        
+        if (!walletAddress) throw new Error("No wallet address after connect");
       }
+
+      // Ensure chainId matches, switch if necessary
+      console.log("Current chainId:", chainId);
+      if (chainId !== monadTestnet.id) {
+        console.log("Switching chain...");
+        await switchChain({ chainId: monadTestnet.id });
+
+        // After chain switch, reconnect wallet
+        await new Promise((res) => setTimeout(res, 500)); // Adding delay before reconnection
+        const reconnected = await connectAsync({ connector: farcasterFrame() });
+        walletAddress = reconnected.accounts?.[0];
+        
+        if (!walletAddress) throw new Error("Reconnect failed after chain switch");
+        console.log("Zincir değişti, tekrar bağlanıldı:", walletAddress);
+        
+        client = await getWalletClient(config, {
+          account: walletAddress,
+          chainId: monadTestnet.id,
+        });
+        if (!client) throw new Error("Wallet client not available after reconnect");
+      }
+
+      if (!client) {
+        throw new Error("Wallet client not available");
+      }
+
+      const txHash = await client.writeContract({
+        address: CONTRACT_ADDRESS,
+        abi: ABI,
+        functionName: "submitScore",
+        args: [score],
+      });
+
+      console.log("✅ Transaction sent:", txHash);
+
+      // Adding a delay before the page reload
+      setTimeout(() => {
+        window.location.reload(); // Triggering reload after a short delay
+      }, 3000); // 3 seconds delay to ensure transaction is processed
+
     };
   }
 }, [
