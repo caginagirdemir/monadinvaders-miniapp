@@ -22,6 +22,8 @@ export default function AppPage() {
       if (event.data?.type === "SUBMIT_SCORE") {
         console.log("SUBMIT_SCORE");
         const newScore = Number(event.data.score);
+
+        console.log(newScore);
         if (!Number.isNaN(newScore)) {
           setScore(newScore);
           setShowWalletActions(true);
