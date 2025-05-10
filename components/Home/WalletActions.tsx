@@ -137,6 +137,7 @@ useEffect(() => {
         window.location.reload(); // Triggering reload after a short delay
       }, 3000); // 3 seconds delay to ensure transaction is processed
 
+      return txHash;
     };
   }
 }, [
