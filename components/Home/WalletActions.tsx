@@ -86,39 +86,37 @@ useEffect(() => {
       }
 
       try {
-        let result;
         let walletAddress = address;
         let client = walletClient;
 
         if (!isConnected) {
           console.log("Bağlı değil. Cüzdan bağlanıyor...");
-          result = await connectAsync({ connector: farcasterFrame() });
+          const result = await connectAsync({ connector: farcasterFrame() });
           walletAddress = result.accounts?.[0];
+          console.log("Cüzdan bağlandı:", walletAddress);
           if (!walletAddress) throw new Error("No wallet address after connect");
         }
 
-        console.log("Bağlı cüzdan:", walletAddress);
         console.log("Current chainId:", chainId);
 
         if (chainId !== monadTestnet.id) {
           console.log("Switching chain...");
           await switchChain({ chainId: monadTestnet.id });
-          await new Promise((res) => setTimeout(res, 300));
 
-          // 🔁 zincir değişince tekrar connect et
-          result = await connectAsync({ connector: farcasterFrame() });
-          walletAddress = result.accounts?.[0];
+          // Zincir değiştikten sonra biraz bekle ve tekrar bağlan
+          await new Promise((res) => setTimeout(res, 500));
+          const reconnected = await connectAsync({ connector: farcasterFrame() });
+          walletAddress = reconnected.accounts?.[0];
           if (!walletAddress) throw new Error("Reconnect failed after chain switch");
 
-          // ✅ client'i yeniden al
+          console.log("Zincir değişti, tekrar bağlanıldı:", walletAddress);
+
           client = await getWalletClient(config, {
             account: walletAddress,
             chainId: monadTestnet.id,
           });
 
-          if (!client) {
-            throw new Error("Wallet client not available after reconnect");
-          }
+          if (!client) throw new Error("Wallet client not available after reconnect");
         }
 
         if (!client) {
@@ -150,6 +148,7 @@ useEffect(() => {
   walletClient,
   address,
 ]);
+
 
 
 
