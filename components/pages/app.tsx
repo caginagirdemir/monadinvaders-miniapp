@@ -18,12 +18,12 @@ export default function AppPage() {
 
   useEffect(() => {
     const handler = (event: MessageEvent) => {
-      console.log("RAW");
+      //console.log("RAW");
       if (event.data?.type === "SUBMIT_SCORE") {
-        console.log("SUBMIT_SCORE");
+        //console.log("SUBMIT_SCORE");
         const newScore = Number(event.data.score);
 
-        console.log(newScore);
+        //console.log(newScore);
         if (!Number.isNaN(newScore)) {
           setScore(newScore);
           setShowWalletActions(true);

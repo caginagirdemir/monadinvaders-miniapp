@@ -23,7 +23,7 @@ export function WalletActions({ score }: WalletActionsProps) {
 
 
   useEffect(() => {
-    console.log("Gelen score props ile:", score);
+    //console.log("Gelen score props ile:", score);
   }, [score]);
 
   const { isEthProviderAvailable } = useMiniAppContext();

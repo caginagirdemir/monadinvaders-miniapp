@@ -95,17 +95,6 @@
 			"type": "function"
 		  }
 	  ];
-	  
-
-	  function submitScore() {
-			console.log(totalScore);
-		}
-
-
-	
-
-
-	
 
 	
 	  audio.addEventListener('click', () => {
@@ -180,7 +169,7 @@
 			// Doğru türde cevap geldiyse işlem yap
 			if (data?.type === "CONNECT_WALLET_RESULT") {
 				window.removeEventListener("message", handler); // Temizle
-				console.log("[Game] CONNECT_WALLET_RESULT received", data);
+				//console.log("[Game] CONNECT_WALLET_RESULT received", data);
 
 				if (data.success && data.address) {
 				resolve(data.address);
@@ -192,7 +181,7 @@
 
 			window.addEventListener("message", handler);
 
-			console.log("[Game] Sending CONNECT_WALLET request to parent");
+			//console.log("[Game] Sending CONNECT_WALLET request to parent");
 			window.parent.postMessage({ type: "CONNECT_WALLET" }, "*");
 		});
 		}
@@ -417,7 +406,6 @@
 	
 	GameView.prototype.gameOver = function() {
 		const score = window.totalScore;
-  		console.log("[Game] Game Over, Score:", score);
 		this.stop();
 		window.parent.postMessage({ type: "SUBMIT_SCORE", score }, "*");
 
@@ -975,9 +963,6 @@
 	  } else {
 	    this.game.score += this.killScore();
 		window.totalScore += this.killScore();
-
-		console.log(window.totalScore);
-
 	    this.game.increaseInvadersSpeed();
 	    this.currentBullet = false;
 	    this.isDead = true;
