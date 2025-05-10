@@ -321,9 +321,12 @@ body {
   height: 20px;
   width: 40px;
 }
-button {
+
+#fire-button, #left-button, #right-button {
   touch-action: none;
+  user-select: none;
 }
+
 
 #play-game {
   position: absolute;
