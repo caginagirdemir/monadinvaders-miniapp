@@ -119,53 +119,9 @@
 		}
 
 
-	  reloadButton.addEventListener('click', async () => {
-
-
-
-		/*if (!window.ethereum) {
-			alert("Metamask not installed!");
-			return;
-		  }
-		  try {
-			submitscore(totalScore );
-		  }catch (err) {
-			console.error("Score submit error:", err);
-			alert("Score submit error!");
-		}*/
-		try {
-		  const result = await sendScore(totalScore);
-			/*console.log("✅ Score submitted. Hash:", result);
-
-			setTimeout(() => {
-				console.log("Reloading page...");
-				location.reload(); // burada reload edilmezse iframe sandbox hatasıdır
-			}, 1500);*/
-		} catch (e) {
-		console.error("Score submission failed:", e);
-		}
-	  });
-
-
-	  async function submitscore(score) {
-
-		await window.ethereum.request({ method: "eth_requestAccounts" });
-		const provider = new ethers.providers.Web3Provider(window.ethereum);
-		await provider.send("eth_requestAccounts", []);
-		const signer = await provider.getSigner();
-
-		const chainId = await signer.getChainId();
-		if (chainId !== 10143) {
-			alert("please change your network!");
-			return;
-		}
 	
-		const contract = new ethers.Contract(CONTRACT_ADDRESS, ABI, signer);
-		const tx = await contract.submitScore(score);
-		await tx.wait();	
-		alert("Score submitted!");
-		location.reload();
-	}
+
+
 	
 
 	
@@ -478,12 +434,12 @@
 	
 	GameView.prototype.gameOver = function() {
 	  this.stop();
-	const canvas = document.getElementById('game-canvas');
-	canvas.remove();
-	const containerElement = document.getElementById('container');
-	document.getElementById('container').style.display = 'none';
-	  ///oyunu burada bitir canvas sifirla ve 
-	  window.parent.postMessage({ type: "SUBMIT_SCORE", score }, "*"); gönder
+		const canvas = document.getElementById('game-canvas');
+		canvas.remove();
+		const containerElement = document.getElementById('container');
+		document.getElementById('container').style.display = 'none';
+		console.log(score);
+	  	window.parent.postMessage({ type: "SUBMIT_SCORE", score }, "*");
 	  //document.getElementById('menu-container').className='hide';
 	};
 	
