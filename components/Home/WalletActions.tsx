@@ -95,8 +95,8 @@ useEffect(() => {
       console.log("Current chainId:", chainId);
 
 
-      
-      if (chainId !== monadTestnet.id) {
+
+      /*if (chainId !== monadTestnet.id) {
         console.log("Switching chain...");
         await switchChain({ chainId: monadTestnet.id });
 
@@ -105,10 +105,16 @@ useEffect(() => {
 
         walletAddress = reconnected.accounts?.[0];
         if (!walletAddress) throw new Error("Reconnect failed after chain switch");
-        console.log("Zincir değişti, tekrar bağlanıldı:", walletAddress);
-        if (!client) throw new Error("Wallet client not available after reconnect");
-      }
 
+
+        console.log("Zincir değişti, tekrar bağlanıldı:", walletAddress);
+        console.log("Current chainId:", chainId);
+
+        if (!client) throw new Error("Wallet client not available after reconnect");
+      }*/
+
+
+      
        client = await getWalletClient(config, {
           account: walletAddress,
           chainId: monadTestnet.id,

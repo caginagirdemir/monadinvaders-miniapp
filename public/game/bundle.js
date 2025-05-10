@@ -131,19 +131,16 @@
 			alert("Score submit error!");
 		}*/
 		try {
-			const result = await sendScore(totalScore);
-			console.log("✅ Score submitted. Hash:", result);
+		  const result = await sendScore(totalScore);
+			/*console.log("✅ Score submitted. Hash:", result);
 
 			setTimeout(() => {
 				console.log("Reloading page...");
 				location.reload(); // burada reload edilmezse iframe sandbox hatasıdır
-			}, 1500);
-			} catch (e) {
-			console.error("Score submission failed:", e);
-			}
-
-
-
+			}, 1500);*/
+		} catch (e) {
+		console.error("Score submission failed:", e);
+		}
 	  });
 
 
