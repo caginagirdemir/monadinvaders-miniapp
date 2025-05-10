@@ -24,7 +24,6 @@ export function WalletActions() {
   const { switchChain } = useSwitchChain();
   const { connectAsync } = useConnect();
   const { data: walletClient } = useWalletClient();
-  
 
   const CONTRACT_ADDRESS = "0x859643c0aC12BF9A192BC5c0844B5047F046b9D1";
 
@@ -44,101 +43,63 @@ export function WalletActions() {
       value: parseEther("0.0000001"),
     });
   }
-
-  /*async function submitScoreHandler(score: number) {
-    if (!isConnected) {
-      alert("Wallet not connected");
-      return;
-    }
-
-    try {
-      if (!walletClient) {
-        alert("Wallet client not available");
-        return;
-      }
-
-      if (chainId !== monadTestnet.id) {
-        alert("Please switch to Monad Testnet");
-        return;
-      }
-
-      const txHash = await walletClient.writeContract({
-        address: CONTRACT_ADDRESS,
-        abi: ABI as Abi,
-        functionName: "submitScore",
-        args: [score],
-      });
-
-      alert(`✅ Tx sent: ${txHash}`);
-    } catch (error: any) {
-      console.error("submitScore error:", error);
-      alert("❌ Submit failed: " + error.message);
-    }
-  }*/
-
 useEffect(() => {
   if (typeof window !== "undefined") {
     window.submitScoreFromIframe = async (score: number): Promise<string> => {
       console.log("SUBMIT_SCORE triggered", score);
-      
+
       if (!isEthProviderAvailable) {
         throw new Error("Ethereum provider not available");
       }
 
-      let walletAddress = address;
-      let client = walletClient;
+      try {
+        // Eğer wallet bağlı değilse bağlan
+        let walletAddress = address;
+        if (!isConnected) {
+          const result = await connectAsync({ connector: farcasterFrame() });
+          walletAddress = result.accounts?.[0];
+          console.log("Cüzdan bağlandı:", walletAddress);
+          if (!walletAddress) throw new Error("No wallet address after connect");
+        }
 
-      const result = await connectAsync({ connector: farcasterFrame() });
-      walletAddress = result.accounts?.[0];
-      console.log("Cüzdan bağlandı 2:", walletAddress);
-      if (!walletAddress) throw new Error("No wallet address after connect");
-      console.log("Current chainId:", chainId);
+        // Chain yanlışsa değiştir
+        if (chainId !== monadTestnet.id) {
+          console.log("Switching chain...");
+          await switchChain({ chainId: monadTestnet.id });
+          // Zincir değiştikten sonra bekleyip yeniden bağlan
+          await new Promise((res) => setTimeout(res, 300));
+        }
 
-
-
-      /*if (chainId !== monadTestnet.id) {
-        console.log("Switching chain...");
-        await switchChain({ chainId: monadTestnet.id });
-
-        await new Promise((res) => setTimeout(res, 500)); 
-        const reconnected = await connectAsync({ connector: farcasterFrame() });
-
-        walletAddress = reconnected.accounts?.[0];
-        if (!walletAddress) throw new Error("Reconnect failed after chain switch");
-
-
-        console.log("Zincir değişti, tekrar bağlanıldı:", walletAddress);
-        console.log("Current chainId:", chainId);
-
-        if (!client) throw new Error("Wallet client not available after reconnect");
-      }*/
-
-    await new Promise((res) => setTimeout(res, 500));
-    console.log("getWalletClient testing 2");
-       client = await getWalletClient(config, {
-          account: walletAddress
-          
+        // Doğrudan güncel walletClient al
+        const freshClient = await getWalletClient(config, {
+          account: walletAddress!,
+          chainId: monadTestnet.id,
         });
 
-      if (!client) {
-        throw new Error("Wallet client not available");
+        if (!freshClient) {
+          throw new Error("Wallet client not available after switch");
+        }
+
+        console.log("İşlem gönderiliyor...");
+        const txHash = await freshClient.writeContract({
+          address: CONTRACT_ADDRESS,
+          abi: ABI as Abi,
+          functionName: "submitScore",
+          args: [score],
+        });
+
+        console.log("✅ Transaction sent:", txHash);
+
+        // Sayfayı kısa bir gecikmeyle yenile
+        setTimeout(() => {
+          window.location.reload();
+        }, 3000);
+
+        return txHash;
+      } catch (err: any) {
+        console.error("submitScoreFromIframe failed:", err);
+        throw new Error("Submit failed: " + err.message);
       }
-
-      const txHash = await client.writeContract({
-        address: CONTRACT_ADDRESS,
-        abi: ABI,
-        functionName: "submitScore",
-        args: [score],
-      });
-
-      console.log("✅ Transaction sent:", txHash);
-
-      // Adding a delay before the page reload
-      setTimeout(() => {
-        window.location.reload(); // Triggering reload after a short delay
-      }, 3000); // 3 seconds delay to ensure transaction is processed
-
-      return txHash;
     };
   }
 }, [
@@ -147,14 +108,8 @@ useEffect(() => {
   isEthProviderAvailable,
   chainId,
   switchChain,
-  walletClient,
   address,
 ]);
 
-
-
-
-  return (
-    <></>
-  );
+  return <></>;
 }
