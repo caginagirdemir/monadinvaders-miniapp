@@ -114,10 +114,10 @@ useEffect(() => {
       }*/
 
     await new Promise((res) => setTimeout(res, 500));
-    console.log("getWalletClient testing");
+    console.log("getWalletClient testing 2");
        client = await getWalletClient(config, {
-          account: walletAddress,
-          chainId: monadTestnet.id,
+          account: walletAddress
+          
         });
 
       if (!client) {
