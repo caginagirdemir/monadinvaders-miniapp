@@ -99,13 +99,13 @@ return (
     <div className="flex flex-row space-x-4 justify-start items-start">
       {isConnected ? (
         <div className="flex flex-col space-y-4 justify-start">
-          <p className="text-sm text-left">
+          <p className="text-sm text-left text-white">
             Connected to wallet:{" "}
             <span className="bg-gray-900 font-mono text-white rounded-md p-[4px]">
               {address}
             </span>
           </p>
-          <p className="text-sm text-left">
+          <p className="text-sm text-left text-white">
             Chain Id:{" "}
             <span className="bg-gray-900 font-mono text-white rounded-md p-[4px]">
               {chainId}
