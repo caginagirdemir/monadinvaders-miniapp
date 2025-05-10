@@ -37,9 +37,16 @@ export function WalletActions() {
     },
   ];
 
-  const SCORE = 0;
+  let SCORE = 0;
 
-  
+    useEffect(() => {
+    if (typeof window !== "undefined") {
+        window.submitScoreFromIframe = (score: number) => {
+          SCORE = score;
+          console.log("Score -->> : ", SCORE);
+        };
+      }
+  }, []);
 
 
 

@@ -42,8 +42,9 @@ export default function Home() {
 
   return (
 
-    <SafeAreaContainer>
-      <WalletActions />
+    <SafeAreaContainer insets={context?.client.safeAreaInsets}>
+      <IframeGame />
+      {showWalletActions && <WalletActions />}
     </SafeAreaContainer>
   );
 }
