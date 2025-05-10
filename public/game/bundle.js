@@ -433,17 +433,16 @@
 	};
 	
 	GameView.prototype.gameOver = function() {
-	  this.stop();
-		const canvas = document.getElementById('game-canvas');
-		canvas.remove();
-		const containerElement = document.getElementById('container');
-		document.getElementById('container').style.display = 'none';
-		const score = this.game.score;
-		console.log(score);
+		this.stop();
+		const score = this.game.score; // BUNU ÇOK ÜSTE AL
+		console.log("Final Score:", score);
 		window.parent.postMessage({ type: "SUBMIT_SCORE", score }, "*");
 
-	  //document.getElementById('menu-container').className='hide';
-	};
+		const canvas = document.getElementById('game-canvas');
+		canvas.remove();
+		document.getElementById('container').style.display = 'none';
+		};
+
 	
 	GameView.KEY_BINDS = {
 	  'left': [-2, 0],
