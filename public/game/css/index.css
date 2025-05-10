@@ -321,6 +321,9 @@ body {
   height: 20px;
   width: 40px;
 }
+button {
+  touch-action: none;
+}
 
 #play-game {
   position: absolute;
