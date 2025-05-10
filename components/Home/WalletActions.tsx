@@ -9,6 +9,7 @@ import {
   useDisconnect,
   useSendTransaction,
   useSwitchChain,
+  useWalletClient
 } from "wagmi";
 import { farcasterFrame } from "@farcaster/frame-wagmi-connector";
 import { useEffect } from "react";
@@ -22,6 +23,7 @@ export function WalletActions() {
   const { data: hash, sendTransaction } = useSendTransaction();
   const { switchChain } = useSwitchChain();
   const { connect } = useConnect();
+  const { data: walletClient } = useWalletClient();
 
   const CONTRACT_ADDRESS = "0x859643c0aC12BF9A192BC5c0844B5047F046b9D1";
 
@@ -42,17 +44,20 @@ export function WalletActions() {
     });
   }
 
-  async function submitScoreHandler(score: number) {
+ async function submitScoreHandler(score: number) {
     try {
-      const walletClient = await getWalletClient(config);
-
-      if (!walletClient) {
-        alert("Wallet client not available");
+      if (!isConnected) {
+        alert("Wallet is not connected.");
         return;
       }
 
       if (chainId !== monadTestnet.id) {
         alert("Please switch to Monad Testnet");
+        return;
+      }
+
+      if (!walletClient) {
+        alert("Wallet client not available");
         return;
       }
 
@@ -69,6 +74,8 @@ export function WalletActions() {
       alert("❌ Submit failed: " + error.message);
     }
   }
+
+
 
 
 
