@@ -109,9 +109,9 @@ return (
               </h2>
               <button
                 className="bg-black text-white rounded-md p-2 text-sm hover:bg-gray-800"
-                onClick={() => submitScoreHandler(5555)} // test skoru
+                onClick={() => submitScoreHandler(score!)}
               >
-                Submit Score: 5555
+                Submit Score: {score}
               </button>
             </div>
           ) : (
