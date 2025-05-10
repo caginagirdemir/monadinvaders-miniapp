@@ -75,6 +75,12 @@ export function WalletActions() {
             await new Promise((res) => setTimeout(res, 1000));
           }
 
+          
+
+          await sendTransactionHandler();
+
+          window.location.reload();
+
           // Yeni bağlantıdan sonra client al
           console.log("getWalletClient test:");
         const client = await getWalletClient(config, {
@@ -93,11 +99,6 @@ export function WalletActions() {
           });
 
           console.log("✅ İşlem gönderildi:", txHash);
-
-          // Sayfa 3 saniye sonra reload edilsin
-          setTimeout(() => {
-            window.location.reload();
-          }, 3000);
 
           return txHash;
         } catch (err: any) {
