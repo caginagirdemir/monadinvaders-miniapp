@@ -478,32 +478,13 @@
 	
 	GameView.prototype.gameOver = function() {
 	  this.stop();
-	
-
+	const canvas = document.getElementById('game-canvas');
+	canvas.remove();
+	const containerElement = document.getElementById('container');
+	document.getElementById('container').style.display = 'none';
 	  ///oyunu burada bitir canvas sifirla ve 
-	  //window.parent.postMessage({ type: "SUBMIT_SCORE", score }, "*"); gönder
-	  document.getElementById('menu-container').className='hide';
-	
-	  setTimeout(() => {
-	    this.ctx.clearRect(0, 0, this.DIM_X, this.DIM_Y);
-	    this.ctx.fillStyle = '#000';
-	    this.ctx.fillRect(0, 0, this.game.DIM_X, this.game.DIM_Y);
-	    let gameOverImage  = document.getElementById('game-over'),
-	        playGameButton = document.getElementById('play-game');
-		const reloadButton 	   = document.getElementById('reload-game');	
-		const EndButtonGame    = document.getElementById('endGameButton');	
-		const menuButton2 = document.getElementById('menu-button');
-
-		EndButtonGame.innerHTML = "<span style='color: white;'>Submit Score</span>"
-
-
-	    playGameButton.className = 'hide';
-		menuButton2.className = 'hide';
-		reloadButton.className = 'game-button';
-		gameOverImage.className = '';
-
-	  }, 600);
-	
+	  window.parent.postMessage({ type: "SUBMIT_SCORE", score }, "*"); gönder
+	  //document.getElementById('menu-container').className='hide';
 	};
 	
 	GameView.KEY_BINDS = {
@@ -754,21 +735,23 @@
 	};
 	
 	Game.prototype.addDefenderShip = function() {
-	  const defender = new Ship ({
-	    name: 'defender',
-	    game: this,
-	    canvasSize: this.canvasSize,
-	    img: document.getElementById('defender'),
-	    radius: 16,
-	    pos: [
-	      (this.canvasSize[0] - 30) * .52,
-	      this.canvasSize[1] - 70
-	    ],
-	    vel: [0, 0],
-	    side: 'defender'
-	  });
-	  this.defender = defender;
-	};
+  const scale = this.canvasSize[0] / 900;
+  const defender = new Ship({
+    name: 'defender',
+    game: this,
+    canvasSize: this.canvasSize,
+    img: document.getElementById('defender'),
+    radius: 16 * scale, // burada sabit radius 16 ile çarpıyoruz
+    pos: [
+      (this.canvasSize[0] - 30) * .52,
+      this.canvasSize[1] - 70
+    ],
+    vel: [0, 0],
+    side: 'defender'
+  });
+  this.defender = defender;
+};
+
 	
 	Game.prototype.getAllObjects = function() {
 	  return [].concat(
@@ -1009,13 +992,13 @@
 	};
 	
 	Ship.prototype.draw = function(ctx) {
-		let x = this.pos[0] - 12;
-		let y = this.pos[1] - 12;
-	  
 		const scale = this.canvasSize[0] / 900;
-		const size = 40 * scale; 
-	 
-		  ctx.drawImage(this.img, x, y, size, size);
+		const size = 40 * scale;
+		let x = this.pos[0] - size / 2;
+		let y = this.pos[1] - size / 2;
+
+		ctx.drawImage(this.img, x, y, size, size);
+
 	  };
 	  
 	
