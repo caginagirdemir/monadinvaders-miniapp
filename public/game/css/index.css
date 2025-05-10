@@ -62,19 +62,19 @@ body {
 
 #invader-info {
   position: absolute;
-  bottom: 250px;
-  left: 148px;
+  bottom: 300px;
+  left: 173px;
 
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   justify-content: space-between;
 
-  width: 71px;
+  width: 150px;
   height: 92px;
 
   font-family: 'Bungee Inline', cursive;
-  font-size: 12px;
+  font-size: 16px;
   color: #fff;
 }
 
@@ -86,8 +86,8 @@ body {
 
 #splash-instruction {
   position: absolute;
-  bottom: 220px;
-  left: 76px;
+  bottom: 250px;
+  left: 101px;
   width: 178px;
   height: 25px;
 
@@ -236,11 +236,11 @@ body {
 
   position: absolute;
   bottom: 63px;
-  left: 107px;
+  left: 132px;
 
   background-color: grey;
   height: 253px;
-  width: 107px;
+  width: 132px;
 
   font-family: 'Bungee Inline', cursive;
   letter-spacing: 1px;
@@ -280,25 +280,25 @@ body {
 #main-logo {
   position: absolute;
   top: 6px;
-  left: 76px;
+  left: 75px;
 
-  height: 100px;
-  width: 178px;
+  height: 150px;
+  width: 250px;
 }
 
 #grunt-1 {
   position: absolute;
-  left: 120px;
-  bottom: 330px;
+  left: 135px;
+  bottom: 380px;
 
-  height: 20px;
-  width: 20px;
+  height: 25px;
+  width: 25px;
 }
 
 #soldier-1 {
   position: absolute;
-  left: 120px;
-  bottom: 304px;
+  left: 137px;
+  bottom: 350px;
 
   height: 20px;
   width: 20px;
@@ -306,8 +306,8 @@ body {
 
 #invader-1 {
   position: absolute;
-  left: 120px;
-  bottom: 279px;
+  left: 137px;
+  bottom: 325px;
 
   height: 20px;
   width: 20px;
@@ -315,17 +315,17 @@ body {
 
 #ufo {
   position: absolute;
-  left: 115px;
-  bottom: 251px;
+  left: 130px;
+  bottom: 297px;
 
   height: 20px;
-  width: 35px;
+  width: 40px;
 }
 
 #play-game {
   position: absolute;
   bottom: 80px;
-  left: 110px;
+  left: 115px;
 
   z-index: 5;
   height: 32px;
@@ -362,7 +362,7 @@ body {
 #leaderboard {
   position: absolute;
   bottom: 40px;
-  left: 90px;
+  left: 115px;
 
   z-index: 5;
   height: 32px;
