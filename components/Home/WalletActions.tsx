@@ -1,7 +1,5 @@
-"use client";
-
 import { useMiniAppContext } from "@/hooks/use-miniapp-context";
-import { parseEther, Abi } from "viem";
+import { parseEther } from "viem";
 import { monadTestnet } from "viem/chains";
 import {
   useAccount,
@@ -9,12 +7,8 @@ import {
   useDisconnect,
   useSendTransaction,
   useSwitchChain,
-  useWalletClient 
 } from "wagmi";
 import { farcasterFrame } from "@farcaster/frame-wagmi-connector";
-import { useEffect } from "react";
-import { getWalletClient } from "wagmi/actions";
-import { config } from "@/lib/wagmi";
 
 export function WalletActions() {
   const { isEthProviderAvailable } = useMiniAppContext();
@@ -22,102 +16,91 @@ export function WalletActions() {
   const { disconnect } = useDisconnect();
   const { data: hash, sendTransaction } = useSendTransaction();
   const { switchChain } = useSwitchChain();
-  const { connectAsync } = useConnect();
-  const { data: walletClient } = useWalletClient();
-
-  const CONTRACT_ADDRESS = "0x859643c0aC12BF9A192BC5c0844B5047F046b9D1";
-
-  const ABI = [
-    {
-      inputs: [{ internalType: "uint256", name: "_score", type: "uint256" }],
-      name: "submitScore",
-      outputs: [],
-      stateMutability: "nonpayable",
-      type: "function",
-    },
-  ];
+  const { connect } = useConnect();
 
   async function sendTransactionHandler() {
     sendTransaction({
       to: "0x7f748f154B6D180D35fA12460C7E4C631e28A9d7",
-      value: parseEther("0.0000001"),
+      value: parseEther("1"),
     });
   }
 
+  return (
+    <div className="space-y-4 border border-[#333] rounded-md p-4">
+      <h2 className="text-xl font-bold text-left">sdk.wallet.ethProvider</h2>
+      <div className="flex flex-row space-x-4 justify-start items-start">
+        {isConnected ? (
+          <div className="flex flex-col space-y-4 justify-start">
+            <p className="text-sm text-left">
+              Connected to wallet:{" "}
+              <span className="bg-white font-mono text-black rounded-md p-[4px]">
+                {address}
+              </span>
+            </p>
+            <p className="text-sm text-left">
+              Chain Id:{" "}
+              <span className="bg-white font-mono text-black rounded-md p-[4px]">
+                {chainId}
+              </span>
+            </p>
+            {chainId === monadTestnet.id ? (
+              <div className="flex flex-col space-y-2 border border-[#333] p-4 rounded-md">
+                <h2 className="text-lg font-semibold text-left">
+                  Send Transaction Example
+                </h2>
+                <button
+                  className="bg-white text-black rounded-md p-2 text-sm"
+                  onClick={sendTransactionHandler}
+                >
+                  Send Transaction
+                </button>
+                {hash && (
+                  <button
+                    className="bg-white text-black rounded-md p-2 text-sm"
+                    onClick={() =>
+                      window.open(
+                        `https://testnet.monadexplorer.com/tx/${hash}`,
+                        "_blank"
+                      )
+                    }
+                  >
+                    View Transaction
+                  </button>
+                )}
+              </div>
+            ) : (
+              <button
+                className="bg-white text-black rounded-md p-2 text-sm"
+                onClick={() => switchChain({ chainId: monadTestnet.id })}
+              >
+                Switch to Monad Testnet
+              </button>
+            )}
 
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      window.submitScoreFromIframe = async (score: number): Promise<string> => {
-        console.log("SUBMIT_SCORE triggered", score);
-
-        if (!isEthProviderAvailable) {
-          throw new Error("Ethereum provider not available");
-        }
-
-        try {
-          // Eğer daha önce cüzdan bağlıysa disconnect
-          if (isConnected) {
-            console.log("Cüzdan zaten bağlı, disconnect ediliyor...");
-            disconnect();
-            await new Promise((res) => setTimeout(res, 500)); // disconnect sonrası küçük bekleme
-          }
-
-          // Cüzdan bağlanıyor
-          const result = await connectAsync({ connector: farcasterFrame() });
-          const walletAddress = result.accounts?.[0];
-          console.log("Cüzdan bağlandı:", walletAddress);
-
-          if (!walletAddress) throw new Error("Cüzdan adresi alınamadı");
-
-          // Eğer chainId farklıysa zinciri değiştir
-          if (chainId !== monadTestnet.id) {
-            await switchChain({ chainId: monadTestnet.id });
-            await new Promise((res) => setTimeout(res, 1000));
-          }
-
-          
-
-          await sendTransactionHandler();
-
-          window.location.reload();
-
-          // Yeni bağlantıdan sonra client al
-          console.log("getWalletClient test:");
-        const client = await getWalletClient(config, {
-          account: walletAddress,
-          chainId: monadTestnet.id,
-        });
-
-          if (!client) throw new Error("WalletClient alınamadı");
-
-          console.log("İşlem gönderiliyor...");
-          const txHash = await client.writeContract({
-            address: CONTRACT_ADDRESS,
-            abi: ABI as Abi,
-            functionName: "submitScore",
-            args: [score],
-          });
-
-          console.log("✅ İşlem gönderildi:", txHash);
-
-          return txHash;
-        } catch (err: any) {
-          console.error("submitScoreFromIframe failed:", err);
-          throw new Error("Submit failed: " + err.message);
-        }
-      };
-    }
-  }, [
-    isConnected,
-    connectAsync,
-    isEthProviderAvailable,
-    chainId,
-    switchChain,
-    address,
-    disconnect,
-  ]);
-
-
-
-  return <></>;
+            <button
+              className="bg-white text-black rounded-md p-2 text-sm"
+              onClick={() => disconnect()}
+            >
+              Disconnect Wallet
+            </button>
+          </div>
+        ) : (
+          isEthProviderAvailable ?
+          (
+            <button
+              className="bg-white text-black w-full rounded-md p-2 text-sm"
+              onClick={() => connect({ connector: farcasterFrame() })}
+            >
+              Connect Wallet
+            </button>
+          ) :
+          (
+            <p className="text-sm text-left">
+              Wallet connection only via Warpcast
+            </p>
+          )
+        )}
+      </div>
+    </div>
+  );
 }

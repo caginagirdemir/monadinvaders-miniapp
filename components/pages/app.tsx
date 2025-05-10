@@ -18,7 +18,7 @@ const Demo = dynamic(() => import("@/components/Home"), {
 
 declare global {
   interface Window {
-    submitScoreFromIframe?: (score: number) => Promise<string>;
+    submitScoreFromIframe?: (score: number) => void;
   }
 }
 
@@ -32,61 +32,9 @@ export default function Home() {
 
       if (event.data?.type === "SUBMIT_SCORE") {
         const score = Number(event.data.score);   
-         if (typeof window.submitScoreFromIframe === "function") {
-           window
-            .submitScoreFromIframe(score)
-      ?.then((address) => {
-        (event.source as Window).postMessage(
-          { type: "CONNECT_WALLET_RESULT", success: !!address, address },
-          "*"
-        );
-      })
-      .catch(() => {
-        (event.source as Window).postMessage(
-          { type: "CONNECT_WALLET_RESULT", success: false },
-          "*"
-        );
-      });
-  }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        /*const score = Number(event.data.score);
-        if (
-          typeof score === "number" &&
-          !Number.isNaN(score) &&
-          typeof window.submitScoreFromIframe === "function"
-        ) {
-          window
-            .submitScoreFromIframe(score)
-            .then((txHash) => {
-              (event.source as Window).postMessage(
-                { type: "SUBMIT_SCORE_RESULT", success: true, txHash },
-                "*"
-              );
-            })
-            .catch((err) => {
-              console.error("submitScoreFromIframe failed:", err);
-              (event.source as Window).postMessage(
-                { type: "SUBMIT_SCORE_RESULT", success: false },
-                "*"
-              );
-            });
-        }*/
+        if (typeof window.submitScoreFromIframe === "function") {
+          window.submitScoreFromIframe(score);
+        }
       }
     };
 
