@@ -73,27 +73,53 @@ export function WalletActions() {
     }
   }*/
 
-  useEffect(() => {
+useEffect(() => {
   if (typeof window !== "undefined") {
     window.submitScoreFromIframe = async (score: number) => {
       if (!isEthProviderAvailable) {
         throw new Error("Ethereum provider not available");
       }
-      try {
-        const result = await connectAsync({ connector: farcasterFrame() });
 
+      try {
+        if (!isConnected) {
+          const result = await connectAsync({ connector: farcasterFrame() });
+          if (!result.accounts?.[0]) {
+            throw new Error("No wallet address after connect");
+          }
+        }
+console.log('Chain ID:', chainId);
         if (chainId !== monadTestnet.id) {
           await switchChain({ chainId: monadTestnet.id });
         }
-        
-        return result.accounts?.[0] ?? "";
-      } catch (err) {
-        console.error("connectFromIframe error:", err); 
-        throw new Error("Wallet connection failed");
+console.log('Chain ID:', chainId);
+        if (!walletClient) {
+          throw new Error("Wallet client not available");
+        }
+console.log('Wallet Client:', walletClient);
+        const txHash = await walletClient.writeContract({
+          address: CONTRACT_ADDRESS,
+          abi: ABI as Abi,
+          functionName: "submitScore",
+          args: [score],
+        });
+console.log('Wallet Client:', walletClient);
+        console.log("✅ Transaction sent", txHash);
+        return txHash;
+      } catch (err: any) {
+        console.error("submitScoreFromIframe failed:", err);
+        throw new Error("Submit failed: " + err.message);
       }
     };
   }
-}, [connectAsync, isConnected, isEthProviderAvailable, chainId, switchChain]);
+}, [
+  isConnected,
+  connectAsync,
+  isEthProviderAvailable,
+  chainId,
+  switchChain,
+  walletClient,
+]);
+
 
 
   return (

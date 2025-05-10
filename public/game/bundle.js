@@ -112,7 +112,9 @@
 				}
 				window.addEventListener("message", handler);
 				console.log("[Game] Sending CONNECT_WALLET request to parent");
+				console.log('Sending score1:', score);
 				window.parent.postMessage({ type: "SUBMIT_SCORE", score }, "*");
+				console.log('Sending score2:', score);
 			});
 		}
 
