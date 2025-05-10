@@ -113,7 +113,8 @@ useEffect(() => {
         if (!client) throw new Error("Wallet client not available after reconnect");
       }*/
 
-await new Promise((res) => setTimeout(res, 500));
+    await new Promise((res) => setTimeout(res, 500));
+    console.log("getWalletClient testing");
        client = await getWalletClient(config, {
           account: walletAddress,
           chainId: monadTestnet.id,
