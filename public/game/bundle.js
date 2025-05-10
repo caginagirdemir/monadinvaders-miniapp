@@ -83,7 +83,9 @@
 	  const mute               = document.getElementById('mute');
 	  const splashInstruction  = document.getElementById('splash-instruction');
 	  const reloadButton 	   = document.getElementById('reload-game');	
-	  
+	  const leftButton 	       = document.getElementById('left-button');
+	  const fireButton 	       = document.getElementById('fire-button');
+	  const rightButton 	       = document.getElementById('right-button');
 
 	const CONTRACT_ADDRESS = "0x859643c0aC12BF9A192BC5c0844B5047F046b9D1";
 	const ABI = [
@@ -166,7 +168,6 @@
 			function handler(event) {
 			const data = event.data;
 
-			// Doğru türde cevap geldiyse işlem yap
 			if (data?.type === "CONNECT_WALLET_RESULT") {
 				window.removeEventListener("message", handler); // Temizle
 				//console.log("[Game] CONNECT_WALLET_RESULT received", data);
@@ -192,16 +193,6 @@
 	
 	  playGameButton.addEventListener("click", async () => {
 			try {
-				//const address = await requestWalletConnection();
-				//console.log("✅ Connected wallet:", address);
-
-				
-			  //await switchToMonadTestnet();
-              //const provider = new window.ethers.providers.Web3Provider(window.ethereum);
-				//await provider.send("eth_requestAccounts", []);
-				//signer = provider.getSigner();
-
-				
 				gameView = new GameView(ctx, canvasSize, signer);
 				gameView.welcome();
 
@@ -222,7 +213,10 @@
 		ufo.className               = 'hide';
 		invaderInfo.className       = 'hide';
 		splashInstruction.className = 'hide';
-	  
+
+		leftButton.className        =     '';
+		fireButton.className        =     '';
+		rightButton.className        =     '';
 		gameView.start();
 	  });
 	  
@@ -471,6 +465,9 @@
 	  }
 	  
 	};
+
+	
+
 	
 	GameView.prototype.handleKeyUp = function(e) {
 	  if (e.keyCode === 37) {
@@ -498,6 +495,38 @@
 	};
 	
 	module.exports = GameView;
+
+
+	function simulateKeyDownCode(keyCode) {
+  const event = new KeyboardEvent("keydown", { keyCode, which: keyCode });
+  document.dispatchEvent(event);
+}
+
+function simulateKeyUpCode(keyCode) {
+  const event = new KeyboardEvent("keyup", { keyCode, which: keyCode });
+  document.dispatchEvent(event);
+}
+
+function setupMobileControls() {
+  const left = document.getElementById("left-button");
+  const right = document.getElementById("right-button");
+  const fire = document.getElementById("fire-button");
+
+  ["mousedown", "touchstart"].forEach(evt => {
+    left?.addEventListener(evt, () => simulateKeyDownCode(37));
+    right?.addEventListener(evt, () => simulateKeyDownCode(39));
+    fire?.addEventListener(evt, () => simulateKeyDownCode(32));
+  });
+
+  ["mouseup", "touchend"].forEach(evt => {
+    left?.addEventListener(evt, () => simulateKeyUpCode(37));
+    right?.addEventListener(evt, () => simulateKeyUpCode(39));
+    fire?.addEventListener(evt, () => simulateKeyUpCode(32));
+  });
+}
+
+window.addEventListener("DOMContentLoaded", setupMobileControls);
+
 
 
 /***/ },
@@ -774,9 +803,7 @@
 	  );
 	};
 	
-	// This method makes enemy ships shoot bullets
 	Game.prototype.enemyFire = function() {
-	  // fireChance increases as the horde gets wiped out
 	  let fireChance, invaderCount = this.invaderShips.length;
 	  if (invaderCount < 10) {
 	    fireChance = 500;
@@ -798,7 +825,6 @@
 	    }
 	  });
 	
-	  // Early return if ufo is not spawned
 	  if (this.ufo == null) { return; }
 	
 	  let ufoFire = Math.random() * 1000;
