@@ -34,9 +34,10 @@ export default function AppPage() {
   }, []);
 
   return (
-    <>
-      <IframeGame />
+    <div style={{ overflowY: "hidden", height: "100vh" }}>
+      {!showWalletActions && <IframeGame />}
       {showWalletActions && isEthProviderAvailable && <WalletActions score={score} />}
-    </>
+    </div>
   );
+
 }
