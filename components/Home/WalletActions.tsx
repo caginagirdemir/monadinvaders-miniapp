@@ -44,77 +44,78 @@ export function WalletActions() {
     });
   }
 
-  
-useEffect(() => {
-  if (typeof window !== "undefined") {
-    window.submitScoreFromIframe = async (score: number): Promise<string> => {
-      console.log("SUBMIT_SCORE triggered", score);
 
-      if (!isEthProviderAvailable) {
-        throw new Error("Ethereum provider not available");
-      }
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      window.submitScoreFromIframe = async (score: number): Promise<string> => {
+        console.log("SUBMIT_SCORE triggered", score);
 
-      try {
-        let walletAddress = address;
+        if (!isEthProviderAvailable) {
+          throw new Error("Ethereum provider not available");
+        }
 
-        if (!isConnected) {
+        try {
+          // Eğer daha önce cüzdan bağlıysa disconnect
+          if (isConnected) {
+            console.log("Cüzdan zaten bağlı, disconnect ediliyor...");
+            disconnect();
+            await new Promise((res) => setTimeout(res, 500)); // disconnect sonrası küçük bekleme
+          }
+
+          // Cüzdan bağlanıyor
           const result = await connectAsync({ connector: farcasterFrame() });
-          walletAddress = result.accounts?.[0];
+          const walletAddress = result.accounts?.[0];
           console.log("Cüzdan bağlandı:", walletAddress);
-          if (!walletAddress) throw new Error("No wallet address after connect");
-        }
 
-        if (chainId !== monadTestnet.id) {
-          console.log("Switching chain...");
-          await switchChain({ chainId: monadTestnet.id });
-          await new Promise((r) => setTimeout(r, 500)); // zincir değişimi sonrası kısa gecikme
+          if (!walletAddress) throw new Error("Cüzdan adresi alınamadı");
 
-          // ✅ tekrar connect çağır
-          const reconnected = await connectAsync({ connector: farcasterFrame() });
-          walletAddress = reconnected.accounts?.[0];
-          if (!walletAddress) throw new Error("Reconnect failed after switch");
-          console.log("Tekrar bağlanıldı:", walletAddress);
-        }
+          // Eğer chainId farklıysa zinciri değiştir
+          if (chainId !== monadTestnet.id) {
+            await switchChain({ chainId: monadTestnet.id });
+            await new Promise((res) => setTimeout(res, 1000));
+          }
 
-        const freshClient = await getWalletClient(config, {
-          account: walletAddress!,
+          // Yeni bağlantıdan sonra client al
+          console.log("getWalletClient test:");
+        const client = await getWalletClient(config, {
+          account: walletAddress,
           chainId: monadTestnet.id,
         });
 
-        if (!freshClient) {
-          throw new Error("Wallet client not available after switch");
+          if (!client) throw new Error("WalletClient alınamadı");
+
+          console.log("İşlem gönderiliyor...");
+          const txHash = await client.writeContract({
+            address: CONTRACT_ADDRESS,
+            abi: ABI as Abi,
+            functionName: "submitScore",
+            args: [score],
+          });
+
+          console.log("✅ İşlem gönderildi:", txHash);
+
+          // Sayfa 3 saniye sonra reload edilsin
+          setTimeout(() => {
+            window.location.reload();
+          }, 3000);
+
+          return txHash;
+        } catch (err: any) {
+          console.error("submitScoreFromIframe failed:", err);
+          throw new Error("Submit failed: " + err.message);
         }
+      };
+    }
+  }, [
+    isConnected,
+    connectAsync,
+    isEthProviderAvailable,
+    chainId,
+    switchChain,
+    address,
+    disconnect,
+  ]);
 
-        console.log("İşlem gönderiliyor...");
-        const txHash = await freshClient.writeContract({
-          address: CONTRACT_ADDRESS,
-          abi: ABI as Abi,
-          functionName: "submitScore",
-          args: [score],
-        });
-
-        console.log("✅ Transaction sent:", txHash);
-
-        // ✅ Sayfayı 3 saniye sonra yenile
-        setTimeout(() => {
-          window.location.reload();
-        }, 3000);
-
-        return txHash;
-      } catch (err: any) {
-        console.error("submitScoreFromIframe failed:", err);
-        throw new Error("Submit failed: " + err.message);
-      }
-    };
-  }
-}, [
-  isConnected,
-  connectAsync,
-  isEthProviderAvailable,
-  chainId,
-  switchChain,
-  address,
-]);
 
 
   return <></>;
