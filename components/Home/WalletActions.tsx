@@ -37,12 +37,11 @@ export function WalletActions() {
     },
   ];
 
-  async function sendTransactionHandler() {
-    sendTransaction({
-      to: "0x7f748f154B6D180D35fA12460C7E4C631e28A9d7",
-      value: parseEther("0.0000001"),
-    });
-  }
+  const SCORE = 0;
+
+  
+
+
 
  async function submitScoreHandler(score: number) {
     try {
@@ -100,19 +99,14 @@ export function WalletActions() {
             {chainId === monadTestnet.id ? (
               <div className="flex flex-col space-y-2 border border-[#333] p-4 rounded-md">
                 <h2 className="text-lg font-semibold text-left">
-                  Send Transaction Example
+                  Submit Score
                 </h2>
+                
                 <button
                   className="bg-white text-black rounded-md p-2 text-sm"
-                  onClick={sendTransactionHandler}
+                  onClick={() => submitScoreHandler(5555)} // test skoru
                 >
-                  Send Transaction
-                </button>
-                <button
-                  className="bg-white text-black rounded-md p-2 text-sm"
-                  onClick={() => submitScoreHandler(1234)} // test skoru
-                >
-                  Submit Score: 1234
+                  Submit Score: 5555
                 </button>
               </div>
             ) : (
