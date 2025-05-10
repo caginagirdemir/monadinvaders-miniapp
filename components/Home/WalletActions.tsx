@@ -73,6 +73,9 @@ async function submitScoreHandler(score: number) {
 
 
   return (
+
+
+
     <div className="space-y-4 border border-[#333] rounded-md p-4">
       <h2 className="text-xl font-bold text-left">sdk.wallet.ethProvider</h2>
       <div className="flex flex-row space-x-4 justify-start items-start">
@@ -100,13 +103,13 @@ async function submitScoreHandler(score: number) {
                   onClick={sendTransactionHandler}
                 >
                   Send Transaction
-                
+                </button>
                 <button
                   className="bg-white text-black rounded-md p-2 text-sm"
                   onClick={() => submitScoreHandler(1234)} // test değeri
                 >
                   Submit Score: 1234
-                </button></button>
+                </button>
 
                 {hash && (
                   <button
