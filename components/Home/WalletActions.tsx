@@ -88,25 +88,20 @@ useEffect(() => {
       let walletAddress = address;
       let client = walletClient;
 
-      // Connect wallet only if not connected
-      if (!isConnected) {
-        console.log("Bağlı değil. Cüzdan bağlanıyor...");
-        const result = await connectAsync({ connector: farcasterFrame() });
-        walletAddress = result.accounts?.[0];
-        console.log("Cüzdan bağlandı:", walletAddress);
-        
-        if (!walletAddress) throw new Error("No wallet address after connect");
-      }
-
+      const result = await connectAsync({ connector: farcasterFrame() });
+      walletAddress = result.accounts?.[0];
+      console.log("Cüzdan bağlandı:", walletAddress);
+      if (!walletAddress) throw new Error("No wallet address after connect");
       console.log("Current chainId:", chainId);
+
+
+      
       if (chainId !== monadTestnet.id) {
         console.log("Switching chain...");
         await switchChain({ chainId: monadTestnet.id });
 
-        // After chain switch, reconnect wallet
-        await new Promise((res) => setTimeout(res, 500)); // Adding delay before reconnection
+        await new Promise((res) => setTimeout(res, 500)); 
         const reconnected = await connectAsync({ connector: farcasterFrame() });
-
 
         walletAddress = reconnected.accounts?.[0];
         if (!walletAddress) throw new Error("Reconnect failed after chain switch");
