@@ -975,6 +975,9 @@
 	  } else {
 	    this.game.score += this.killScore();
 		window.totalScore += this.killScore();
+
+		console.log(window.totalScore);
+
 	    this.game.increaseInvadersSpeed();
 	    this.currentBullet = false;
 	    this.isDead = true;
