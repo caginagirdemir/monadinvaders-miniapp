@@ -98,7 +98,6 @@ useEffect(() => {
         if (!walletAddress) throw new Error("No wallet address after connect");
       }
 
-      // Ensure chainId matches, switch if necessary
       console.log("Current chainId:", chainId);
       if (chainId !== monadTestnet.id) {
         console.log("Switching chain...");
@@ -107,17 +106,18 @@ useEffect(() => {
         // After chain switch, reconnect wallet
         await new Promise((res) => setTimeout(res, 500)); // Adding delay before reconnection
         const reconnected = await connectAsync({ connector: farcasterFrame() });
+
+
         walletAddress = reconnected.accounts?.[0];
-        
         if (!walletAddress) throw new Error("Reconnect failed after chain switch");
         console.log("Zincir değişti, tekrar bağlanıldı:", walletAddress);
-        
-        client = await getWalletClient(config, {
+        if (!client) throw new Error("Wallet client not available after reconnect");
+      }
+
+       client = await getWalletClient(config, {
           account: walletAddress,
           chainId: monadTestnet.id,
         });
-        if (!client) throw new Error("Wallet client not available after reconnect");
-      }
 
       if (!client) {
         throw new Error("Wallet client not available");
