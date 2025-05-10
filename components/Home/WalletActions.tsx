@@ -79,36 +79,47 @@ export function WalletActions() {
 useEffect(() => {
   if (typeof window !== "undefined") {
     
-
-    window.submitScoreFromIframe = async (score: number) => {
-  console.log("SUBMIT_SCORE triggered", score);
+window.submitScoreFromIframe = async (score: number) => {
+  console.log("SUBMIT_SCORE triggered 1", score);
 
   if (!isEthProviderAvailable) {
     throw new Error("Ethereum provider not available");
   }
 
-  let walletAddress = address;
-
   try {
-    // 1. Bağlı değilse bağlan
+    let result;
+    let walletAddress = address;
+
+    // Eğer bağlı değilse bağlan
     if (!isConnected) {
-      const result = await connectAsync({ connector: farcasterFrame() });
+      console.log("Bağlı değil. Cüzdan bağlanıyor...");
+      result = await connectAsync({ connector: farcasterFrame() });
       walletAddress = result.accounts?.[0];
-      if (!walletAddress) throw new Error("No wallet address found");
     }
 
-    // 2. Zincir yanlışsa değiştir
+    if (!walletAddress) {
+      throw new Error("No wallet address found");
+    }
+
+    console.log("Bağlı cüzdan:", walletAddress);
+    console.log("Current chainId:", chainId);
+
+    // Zincir doğru değilse değiştir
     if (chainId !== monadTestnet.id) {
       console.log("Switching chain...");
       await switchChain({ chainId: monadTestnet.id });
 
-      // 🔁 zincir değişince cüzdan bağlantısını tekrar dene
-      const result = await connectAsync({ connector: farcasterFrame() });
+      // ✅ Zincir değişince tekrar bağlan
+      console.log("Zincir değişti, tekrar bağlanılıyor...");
+      result = await connectAsync({ connector: farcasterFrame() });
       walletAddress = result.accounts?.[0];
-      if (!walletAddress) throw new Error("No wallet address found after switch");
+
+      if (!walletAddress) {
+        throw new Error("Reconnect failed after chain switch");
+      }
     }
 
-    // 3. Yeni client al
+    // Yeni walletClient al
     const client = await getWalletClient(config, {
       account: walletAddress,
       chainId: monadTestnet.id,
@@ -118,7 +129,7 @@ useEffect(() => {
       throw new Error("Wallet client not available");
     }
 
-    // 4. İşlemi gönder
+    console.log("İşlem gönderiliyor...");
     const txHash = await client.writeContract({
       address: CONTRACT_ADDRESS,
       abi: ABI as Abi,
@@ -126,13 +137,14 @@ useEffect(() => {
       args: [score],
     });
 
-    console.log("✅ Tx sent:", txHash);
+    console.log("✅ Transaction sent:", txHash);
     return txHash;
   } catch (err: any) {
     console.error("submitScoreFromIframe failed:", err);
     throw new Error("Submit failed: " + err.message);
   }
 };
+
 
 
 
