@@ -330,7 +330,7 @@ body {
 
 #play-game {
   position: absolute;
-  bottom: 80px;
+  bottom: 120px;
   left: 115px;
 
   z-index: 5;
@@ -364,6 +364,42 @@ body {
   align-items: center;
 }
 
+
+#play-game-mobile {
+  position: absolute;
+  bottom: 80px;
+  left: 115px;
+
+  z-index: 5;
+  height: 32px;
+  width: 150px;
+  transition: all .2s ease-in;
+  border: 2px solid #fff;
+  border-radius: 2px;
+
+  font-family: 'Bungee Inline', cursive;
+  font-size: 14px;
+  color: #fff;
+  letter-spacing: 1px;
+}
+
+#play-game-mobile:hover {
+  cursor: pointer;
+  transition: all .2s ease-in;
+  background: rgba(255,255,255,0.4);
+}
+
+#play-game-mobile p {
+  width: 100%;
+  height: 100%;
+
+  position: absolute;
+  top: -15px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
 #leaderboard {
   position: absolute;

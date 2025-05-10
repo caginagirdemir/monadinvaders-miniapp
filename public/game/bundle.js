@@ -62,6 +62,7 @@
 	
 	  const mainLogo           = document.getElementById('main-logo');
 	  const playGameButton     = document.getElementById('play-game');
+	  const playGameButtonMobile     = document.getElementById('play-game-mobile');
 	  const leaderboardButton     = document.getElementById('leaderboard');
 	  const gameOverImage      = document.getElementById('game-over');
 	  const menuButton         = document.getElementById('menu-button');
@@ -162,35 +163,7 @@
 		window.location.href = "leaderboard.html";
 	});
 
-	async function requestWalletConnection() {
-		return new Promise((resolve, reject) => {
-			function handler(event) {
-			const data = event.data;
-
-			if (data?.type === "CONNECT_WALLET_RESULT") {
-				window.removeEventListener("message", handler); // Temizle
-				//console.log("[Game] CONNECT_WALLET_RESULT received", data);
-
-				if (data.success && data.address) {
-				resolve(data.address);
-				} else {
-				reject(new Error("Wallet connection failed2"));
-				}
-			}
-			}
-
-			window.addEventListener("message", handler);
-
-			//console.log("[Game] Sending CONNECT_WALLET request to parent");
-			window.parent.postMessage({ type: "CONNECT_WALLET" }, "*");
-		});
-		}
-
-
-
-
-	
-	playGameButton.addEventListener("click", async () => {
+	async function initalOperation() {
 		try {
 			gameView = new GameView(ctx, canvasSize, signer);
 			gameView.welcome();
@@ -203,6 +176,7 @@
 
 		menuButton.className        =     '';
 		playGameButton.className    = 'hide';
+		playGameButtonMobile.className    = 'hide';
 		leaderboardButton.className = 'hide';
 		mainLogo.className          = 'hide';
 		gameOverImage.className     = 'hide';
@@ -213,10 +187,21 @@
 		invaderInfo.className       = 'hide';
 		splashInstruction.className = 'hide';
 
+		
+		gameView.start();
+	}
+
+
+	playGameButtonMobile.addEventListener("click", async () => {
 		leftButton.className        =     '';
 		fireButton.className        =     '';
 		rightButton.className        =     '';
-		gameView.start();
+		initalOperation()
+	  });
+
+	
+	playGameButton.addEventListener("click", async () => {
+		initalOperation()
 	  });
 	  
 	
