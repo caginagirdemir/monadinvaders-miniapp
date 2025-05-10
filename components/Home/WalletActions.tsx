@@ -79,8 +79,10 @@ export function WalletActions() {
 useEffect(() => {
   if (typeof window !== "undefined") {
     
+
+    
 window.submitScoreFromIframe = async (score: number) => {
-  console.log("SUBMIT_SCORE triggered 1", score);
+  console.log("SUBMIT_SCORE triggered", score);
 
   if (!isEthProviderAvailable) {
     throw new Error("Ethereum provider not available");
@@ -90,7 +92,6 @@ window.submitScoreFromIframe = async (score: number) => {
     let result;
     let walletAddress = address;
 
-    // Eğer bağlı değilse bağlan
     if (!isConnected) {
       console.log("Bağlı değil. Cüzdan bağlanıyor...");
       result = await connectAsync({ connector: farcasterFrame() });
@@ -104,12 +105,13 @@ window.submitScoreFromIframe = async (score: number) => {
     console.log("Bağlı cüzdan:", walletAddress);
     console.log("Current chainId:", chainId);
 
-    // Zincir doğru değilse değiştir
     if (chainId !== monadTestnet.id) {
       console.log("Switching chain...");
       await switchChain({ chainId: monadTestnet.id });
 
-      // ✅ Zincir değişince tekrar bağlan
+      // 🔁 Zincir değişimi sonrasında küçük bir bekleme
+      await new Promise((res) => setTimeout(res, 300));
+
       console.log("Zincir değişti, tekrar bağlanılıyor...");
       result = await connectAsync({ connector: farcasterFrame() });
       walletAddress = result.accounts?.[0];
@@ -119,7 +121,6 @@ window.submitScoreFromIframe = async (score: number) => {
       }
     }
 
-    // Yeni walletClient al
     const client = await getWalletClient(config, {
       account: walletAddress,
       chainId: monadTestnet.id,
@@ -144,7 +145,6 @@ window.submitScoreFromIframe = async (score: number) => {
     throw new Error("Submit failed: " + err.message);
   }
 };
-
 
 
 
