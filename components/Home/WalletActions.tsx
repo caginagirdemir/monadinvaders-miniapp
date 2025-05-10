@@ -1,5 +1,7 @@
+"use client";
+
 import { useMiniAppContext } from "@/hooks/use-miniapp-context";
-import { parseEther } from "viem";
+import { parseEther, Abi } from "viem";
 import { monadTestnet } from "viem/chains";
 import {
   useAccount,
@@ -7,8 +9,12 @@ import {
   useDisconnect,
   useSendTransaction,
   useSwitchChain,
+  useWalletClient 
 } from "wagmi";
 import { farcasterFrame } from "@farcaster/frame-wagmi-connector";
+import { useEffect } from "react";
+import { getWalletClient } from "wagmi/actions";
+import { config } from "@/lib/wagmi";
 
 export function WalletActions() {
   const { isEthProviderAvailable } = useMiniAppContext();
@@ -18,12 +24,53 @@ export function WalletActions() {
   const { switchChain } = useSwitchChain();
   const { connect } = useConnect();
 
+  const CONTRACT_ADDRESS = "0x859643c0aC12BF9A192BC5c0844B5047F046b9D1";
+
+  const ABI = [
+    {
+      inputs: [{ internalType: "uint256", name: "_score", type: "uint256" }],
+      name: "submitScore",
+      outputs: [],
+      stateMutability: "nonpayable",
+      type: "function",
+    },
+  ];
+
   async function sendTransactionHandler() {
     sendTransaction({
       to: "0x7f748f154B6D180D35fA12460C7E4C631e28A9d7",
       value: parseEther("1"),
     });
   }
+
+async function submitScoreHandler(score: number) {
+  try {
+    const walletClient = await getWalletClient(config); // config burada gerekli!
+
+    if (!walletClient) {
+      alert("Wallet client not available");
+      return;
+    }
+
+    if (chainId !== monadTestnet.id) {
+      alert("Please switch to Monad Testnet");
+      return;
+    }
+
+    const txHash = await walletClient.writeContract({
+      address: CONTRACT_ADDRESS,
+      abi: ABI as Abi,
+      functionName: "submitScore",
+      args: [score],
+    });
+
+    alert(`✅ Tx sent: ${txHash}`);
+  } catch (error: any) {
+    console.error("submitScore error:", error);
+    alert("❌ Submit failed: " + error.message);
+  }
+}
+
 
   return (
     <div className="space-y-4 border border-[#333] rounded-md p-4">
@@ -53,7 +100,14 @@ export function WalletActions() {
                   onClick={sendTransactionHandler}
                 >
                   Send Transaction
-                </button>
+                
+                <button
+                  className="bg-white text-black rounded-md p-2 text-sm"
+                  onClick={() => submitScoreHandler(1234)} // test değeri
+                >
+                  Submit Score: 1234
+                </button></button>
+
                 {hash && (
                   <button
                     className="bg-white text-black rounded-md p-2 text-sm"

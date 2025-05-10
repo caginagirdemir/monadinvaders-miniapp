@@ -1,5 +1,6 @@
+// lib/wagmi.ts
 import { createConfig, http } from 'wagmi';
-import { monadTestnet } from 'wagmi/chains';
+import { monadTestnet } from 'viem/chains';
 import { farcasterFrame } from '@farcaster/frame-wagmi-connector';
 
 export const config = createConfig({
@@ -8,5 +9,4 @@ export const config = createConfig({
   transports: {
     [monadTestnet.id]: http(),
   },
-  ssr: true,
 });
