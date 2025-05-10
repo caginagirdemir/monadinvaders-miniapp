@@ -97,10 +97,6 @@
 			"type": "function"
 		  }
 	  ];
-
-
-	
-
 	
 	  audio.addEventListener('click', () => {
 	    if (audio.className === 'hide') {
@@ -204,7 +200,6 @@
 			console.error("Game start error:", error);
 
 		}
-
 
 		menuButton.className        =     '';
 		playGameButton.className    = 'hide';
@@ -344,57 +339,8 @@
 	GameView.prototype.toggleAudio = function() {
 	  this.isMuted = this.isMuted ? false : true;
 	};
-
-	  function setupMobileControls() {
-		const left = document.getElementById("left-button");
-		const right = document.getElementById("right-button");
-		const fire = document.getElementById("fire-button");
-
-		const simulateKeyDownCode = (code) => {
-			window.dispatchEvent(new KeyboardEvent("keydown", { keyCode: code }));
-		};
-
-		const simulateKeyUpCode = (code) => {
-			window.dispatchEvent(new KeyboardEvent("keyup", { keyCode: code }));
-		};
-
-		["touchstart"].forEach(evt => {
-			left?.addEventListener(evt, e => {
-			e.preventDefault();
-			simulateKeyDownCode(37);
-			}, { passive: false });
-
-			right?.addEventListener(evt, e => {
-			e.preventDefault();
-			simulateKeyDownCode(39);
-			}, { passive: false });
-
-			fire?.addEventListener(evt, e => {
-			e.preventDefault();
-			simulateKeyDownCode(32);
-			}, { passive: false });
-		});
-
-		["touchend", "touchcancel"].forEach(evt => {
-			left?.addEventListener(evt, e => {
-			e.preventDefault();
-			simulateKeyUpCode(37);
-			}, { passive: false });
-
-			right?.addEventListener(evt, e => {
-			e.preventDefault();
-			simulateKeyUpCode(39);
-			}, { passive: false });
-
-			fire?.addEventListener(evt, e => {
-			e.preventDefault();
-			simulateKeyUpCode(32);
-			}, { passive: false });
-		});
-		}
 	
 	GameView.prototype.start = function() {
-	  setupMobileControls();
 	  this.interval = setInterval(() => {
 	    if (!this.isPaused) {
 	      this.game.draw(this.ctx);
@@ -519,7 +465,35 @@
 	  
 	};
 
-	
+	GameView.prototype.addButtonListeners = function() {
+		const fireButton = document.getElementById('fire-button');
+		const leftButton = document.getElementById('left-button');
+		const rightButton = document.getElementById('right-button');
+		fireButton.addEventListener("touchstart", (e) => {
+			e.preventDefault(); 
+			this.spacePressed = true;
+		});
+		fireButton.addEventListener("touchend", (e) => {
+			e.preventDefault();
+			this.spacePressed = false;
+		});
+		leftButton.addEventListener("touchstart", (e) => {
+			e.preventDefault(); 
+			this.leftPressed = true;
+		});
+		leftButton.addEventListener("touchend", (e) => {
+			e.preventDefault(); 
+			this.leftPressed = false;
+		});
+		rightButton.addEventListener("touchstart", (e) => {
+			e.preventDefault(); 
+			this.rightPressed = true;
+		});
+		rightButton.addEventListener("touchend", (e) => {
+			e.preventDefault(); 
+			this.rightPressed = false;
+		});
+	};
 
 	
 	GameView.prototype.handleKeyUp = function(e) {
@@ -594,6 +568,7 @@
 	  this.addShields();
 	
 	  this.gameView.addKeyListeners();
+	  this.gameView.addButtonListeners();
 	};
 	
 	Game.BG_COLOR = "#000000";
