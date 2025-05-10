@@ -44,8 +44,8 @@ export function WalletActions() {
 
       console.log("teststttwtt111")
         window.submitScoreFromIframe = (score: number) => {
+          console.log("Score -->> : ", score);
           SCORE = score;
-          console.log("Score -->> : ", SCORE);
         };
       }
   }, []);
@@ -89,7 +89,7 @@ export function WalletActions() {
 
 return (
   <div className="space-y-4 border border-[#333] rounded-md p-4">
-    <h2 className="text-xl font-bold text-left">sdk.wallet.ethProvider</h2>
+    <h2 className="text-xl font-bold text-left">Monad Invaders</h2>
     <div className="flex flex-row space-x-4 justify-start items-start">
       {isConnected ? (
         <div className="flex flex-col space-y-4 justify-start">
@@ -106,7 +106,7 @@ return (
             </span>
           </p>
           {chainId === monadTestnet.id ? (
-            <div className="flex flex-col space-y-2 border border-[#333] p-4 rounded-md">
+            <div className="flex flex-col">
               <h2 className="text-lg font-semibold text-left">
                 Submit Score
               </h2>
