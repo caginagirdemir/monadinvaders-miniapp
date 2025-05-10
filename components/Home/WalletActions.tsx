@@ -90,7 +90,7 @@ useEffect(() => {
 
       const result = await connectAsync({ connector: farcasterFrame() });
       walletAddress = result.accounts?.[0];
-      console.log("Cüzdan bağlandı:", walletAddress);
+      console.log("Cüzdan bağlandı 2:", walletAddress);
       if (!walletAddress) throw new Error("No wallet address after connect");
       console.log("Current chainId:", chainId);
 
