@@ -41,6 +41,8 @@ export function WalletActions() {
 
     useEffect(() => {
     if (typeof window !== "undefined") {
+
+      console.log("teststttwtt111")
         window.submitScoreFromIframe = (score: number) => {
           SCORE = score;
           console.log("Score -->> : ", SCORE);
