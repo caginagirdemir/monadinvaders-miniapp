@@ -2,19 +2,9 @@
 
 import { SafeAreaContainer } from "@/components/safe-area-container";
 import { useMiniAppContext } from "@/hooks/use-miniapp-context";
-import dynamic from "next/dynamic";
 import IframeGame from "@/components/IframeGame";
-import { FarcasterActions } from "@/components/Home/FarcasterActions";
-import { User } from "@/components/Home/User";
 import { WalletActions } from "@/components/Home/WalletActions";
-import { useEffect } from "react";
-
-
-
-const Demo = dynamic(() => import("@/components/Home"), {
-  ssr: false,
-  loading: () => <div>Loading...</div>,
-});
+import { useEffect, useState } from "react";
 
 declare global {
   interface Window {
@@ -22,17 +12,25 @@ declare global {
   }
 }
 
-
 export default function Home() {
   const { context } = useMiniAppContext();
+  const [showWalletActions, setShowWalletActions] = useState(false);
 
   useEffect(() => {
     const handler = (event: MessageEvent) => {
       console.log(event.data?.type);
 
       if (event.data?.type === "SUBMIT_SCORE") {
-        const score = Number(event.data.score);   
-        if (typeof window.submitScoreFromIframe === "function") {
+        console.log("SUBMIT_SCORE");
+        setShowWalletActions(true); 
+
+        const score = Number(event.data.score);
+        if (
+          typeof score === "number" &&
+          !Number.isNaN(score) &&
+          typeof window.submitScoreFromIframe === "function"
+        ) {
+          console.log("SUBMIT_SCORE triggered", score);
           window.submitScoreFromIframe(score);
         }
       }
@@ -43,11 +41,9 @@ export default function Home() {
   }, []);
 
   return (
-    <div style={{ overflowY: "hidden", height: "100vh" }}>
-      <SafeAreaContainer insets={context?.client.safeAreaInsets}>
-        <IframeGame />
-        <WalletActions />
-      </SafeAreaContainer>
-    </div>
+    <SafeAreaContainer insets={context?.client.safeAreaInsets}>
+      <IframeGame />
+      {showWalletActions && <WalletActions />}
+    </SafeAreaContainer>
   );
 }
