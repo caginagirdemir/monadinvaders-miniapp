@@ -80,49 +80,45 @@ useEffect(() => {
   if (typeof window !== "undefined") {
     
 
-window.submitScoreFromIframe = async (score: number) => {
+    window.submitScoreFromIframe = async (score: number) => {
   console.log("SUBMIT_SCORE triggered", score);
 
   if (!isEthProviderAvailable) {
     throw new Error("Ethereum provider not available");
   }
 
-  console.log("isConnected:", isConnected);
-  console.log("address:", address);
-  console.log("chainId:", chainId);
-  console.log("walletClient:", walletClient);
-
   let walletAddress = address;
-  let client = walletClient;
 
   try {
+    // 1. Bağlı değilse bağlan
     if (!isConnected) {
       const result = await connectAsync({ connector: farcasterFrame() });
       walletAddress = result.accounts?.[0];
-      console.log("Connected address:", walletAddress);
+      if (!walletAddress) throw new Error("No wallet address found");
     }
 
-    if (!walletAddress) {
-      throw new Error("No wallet address found");
-    }
-
+    // 2. Zincir yanlışsa değiştir
     if (chainId !== monadTestnet.id) {
       console.log("Switching chain...");
       await switchChain({ chainId: monadTestnet.id });
 
-      // zincir değişince client yeniden alınmalı
-      client = await getWalletClient(config, {
-        account: walletAddress,
-        chainId: monadTestnet.id,
-      });
-
-      console.log("New client after chain switch:", client);
+      // 🔁 zincir değişince cüzdan bağlantısını tekrar dene
+      const result = await connectAsync({ connector: farcasterFrame() });
+      walletAddress = result.accounts?.[0];
+      if (!walletAddress) throw new Error("No wallet address found after switch");
     }
+
+    // 3. Yeni client al
+    const client = await getWalletClient(config, {
+      account: walletAddress,
+      chainId: monadTestnet.id,
+    });
 
     if (!client) {
       throw new Error("Wallet client not available");
     }
 
+    // 4. İşlemi gönder
     const txHash = await client.writeContract({
       address: CONTRACT_ADDRESS,
       abi: ABI as Abi,
@@ -137,6 +133,7 @@ window.submitScoreFromIframe = async (score: number) => {
     throw new Error("Submit failed: " + err.message);
   }
 };
+
 
 
   }
