@@ -1,37 +1,50 @@
-const walletAddress = handleConnect.accounts?.[0];
-          console.log("Cüzdan bağlandı:", walletAddress);
+"use client";
 
-          if (!walletAddress) throw new Error("Cüzdan adresi alınamadı");
+import { SafeAreaContainer } from "@/components/safe-area-container";
+import { useMiniAppContext } from "@/hooks/use-miniapp-context";
+import IframeGame from "@/components/IframeGame";
+import { WalletActions } from "@/components/Home/WalletActions";
+import { useEffect, useState } from "react";
 
-          // Eğer chainId farklıysa zinciri değiştir
-          if (chainId !== monadTestnet.id) {
-            await switchChain({ chainId: monadTestnet.id });
-            await new Promise((res) => setTimeout(res, 1000));
-          }
+declare global {
+  interface Window {
+    submitScoreFromIframe?: (score: number) => void;
+  }
+}
 
-          
+export default function Home() {
+  const { context } = useMiniAppContext();
+  const [showWalletActions, setShowWalletActions] = useState(false);
 
-          /*await sendTransactionHandler();
+  useEffect(() => {
+    const handler = (event: MessageEvent) => {
+      console.log(event.data?.type);
 
-          window.location.reload();*/
+      if (event.data?.type === "SUBMIT_SCORE") {
+        console.log("SUBMIT_SCORE");
+        setShowWalletActions(true); 
 
-          // Yeni bağlantıdan sonra client al
-          console.log("getWalletClient test:");
-        const client = await getWalletClient(config, {
-          account: walletAddress,
-          chainId: monadTestnet.id,
-        });
+        const score = Number(event.data.score);
+        if (
+          typeof score === "number" &&
+          !Number.isNaN(score) &&
+          typeof window.submitScoreFromIframe === "function"
+        ) {
+          console.log("SUBMIT_SCORE triggered", score);
+          window.submitScoreFromIframe(score);
+        }
+      }
+    };
 
-          if (!client) throw new Error("WalletClient alınamadı");
+    window.addEventListener("message", handler);
+    return () => window.removeEventListener("message", handler);
+  }, []);
 
-          console.log("İşlem gönderiliyor...");
-          const txHash = await client.writeContract({
-            address: CONTRACT_ADDRESS,
-            abi: ABI as Abi,
-            functionName: "submitScore",
-            args: [score],
-          });
+  return (
 
-          console.log("✅ İşlem gönderildi:", txHash);
-
-          return txHash;
+    <SafeAreaContainer insets={context?.client.safeAreaInsets}>
+      <IframeGame />
+      {showWalletActions && <WalletActions />}
+    </SafeAreaContainer>
+  );
+}
