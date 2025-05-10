@@ -13,10 +13,19 @@ import {
 } from "wagmi";
 import { farcasterFrame } from "@farcaster/frame-wagmi-connector";
 import { useEffect } from "react";
-import { getWalletClient } from "wagmi/actions";
-import { config } from "@/lib/wagmi"; // 🧠 config'in yolunu kontrol et!
 
-export function WalletActions() {
+
+interface WalletActionsProps {
+  score: number;
+}
+
+export function WalletActions({ score }: WalletActionsProps) {
+
+
+  useEffect(() => {
+    console.log("Gelen score props ile:", score);
+  }, [score]);
+
   const { isEthProviderAvailable } = useMiniAppContext();
   const { isConnected, address, chainId } = useAccount();
   const { disconnect } = useDisconnect();
@@ -24,6 +33,8 @@ export function WalletActions() {
   const { switchChain } = useSwitchChain();
   const { connect } = useConnect();
   const { data: walletClient } = useWalletClient();
+
+
 
   const CONTRACT_ADDRESS = "0x859643c0aC12BF9A192BC5c0844B5047F046b9D1";
 
@@ -36,20 +47,6 @@ export function WalletActions() {
       type: "function",
     },
   ];
-
-  let SCORE = 0;
-
-    useEffect(() => {
-    if (typeof window !== "undefined") {
-
-      console.log("teststttwtt111")
-        window.submitScoreFromIframe = (score: number) => {
-          console.log("Score -->> : ", score);
-          SCORE = score;
-        };
-      }
-  }, []);
-
 
 
  async function submitScoreHandler(score: number) {
@@ -95,13 +92,13 @@ return (
         <div className="flex flex-col space-y-4 justify-start">
           <p className="text-sm text-left">
             Connected to wallet:{" "}
-            <span className="bg-white font-mono text-black rounded-md p-[4px]">
+            <span className="bg-gray-900 font-mono text-white rounded-md p-[4px]">
               {address}
             </span>
           </p>
           <p className="text-sm text-left">
             Chain Id:{" "}
-            <span className="bg-white font-mono text-black rounded-md p-[4px]">
+            <span className="bg-gray-900 font-mono text-white rounded-md p-[4px]">
               {chainId}
             </span>
           </p>
