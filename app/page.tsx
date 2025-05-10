@@ -17,8 +17,6 @@ const frame = {
   },
 };
 
-
-
 export async function generateMetadata(): Promise<Metadata> {
   return {
     title: "Monad Farcaster MiniApp Template",
