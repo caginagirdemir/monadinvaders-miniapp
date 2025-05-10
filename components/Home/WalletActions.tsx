@@ -13,7 +13,7 @@ import {
 } from "wagmi";
 import { farcasterFrame } from "@farcaster/frame-wagmi-connector";
 import { useEffect } from "react";
-
+import Image from "next/image";
 
 interface WalletActionsProps {
   score?: number;
@@ -85,7 +85,11 @@ export function WalletActions({ score }: WalletActionsProps) {
 
 
 return (
+
+
+
   <div className="space-y-4 border border-[#333] rounded-md p-4">
+    <Image src="/game/images/game-over.png" alt="Game Over"/>
     <h2 className="text-xl font-bold text-left">Monad Invaders</h2>
     <div className="flex flex-row space-x-4 justify-start items-start">
       {isConnected ? (
