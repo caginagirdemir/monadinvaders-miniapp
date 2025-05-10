@@ -9,11 +9,10 @@ import {
   useDisconnect,
   useSendTransaction,
   useSwitchChain,
+  useWalletClient,
 } from "wagmi";
 import { farcasterFrame } from "@farcaster/frame-wagmi-connector";
-import { useEffect } from "react";
-import { getWalletClient } from "wagmi/actions";
-import { config } from "@/lib/wagmi"; // 🧠 config'in yolunu kontrol et!
+import { useEffect, useState } from "react";
 
 export function WalletActions() {
   const { isEthProviderAvailable } = useMiniAppContext();
@@ -22,6 +21,8 @@ export function WalletActions() {
   const { data: hash, sendTransaction } = useSendTransaction();
   const { switchChain } = useSwitchChain();
   const { connect } = useConnect();
+  const { data: walletClient } = useWalletClient();
+  const [showUI, setShowUI] = useState(false);
 
   const CONTRACT_ADDRESS = "0x859643c0aC12BF9A192BC5c0844B5047F046b9D1";
 
@@ -35,25 +36,11 @@ export function WalletActions() {
     },
   ];
 
-  async function sendTransactionHandler() {
-    sendTransaction({
-      to: "0x7f748f154B6D180D35fA12460C7E4C631e28A9d7",
-      value: parseEther("0.0000001"),
-    });
-  }
-
   async function submitScoreHandler(score: number) {
     try {
-      const walletClient = await getWalletClient(config);
-
-      if (!walletClient) {
-        alert("Wallet client not available");
-        return;
-      }
-
+      if (!walletClient) throw new Error("Wallet client not available");
       if (chainId !== monadTestnet.id) {
-        alert("Please switch to Monad Testnet");
-        return;
+        await switchChain({ chainId: monadTestnet.id });
       }
 
       const txHash = await walletClient.writeContract({
@@ -63,14 +50,27 @@ export function WalletActions() {
         args: [score],
       });
 
-      alert(`✅ Tx sent: ${txHash}`);
+      console.log("Transaction sent:", txHash);
     } catch (error: any) {
       console.error("submitScore error:", error);
-      alert("❌ Submit failed: " + error.message);
     }
   }
 
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      window.submitScoreFromIframe = (score: number) => {
+        setShowUI(true);
+        if (!isConnected && isEthProviderAvailable) {
+          connect({ connector: farcasterFrame() });
+        }
+        if (isConnected) {
+          submitScoreHandler(score);
+        }
+      };
+    }
+  }, [isConnected, connect, walletClient, chainId]);
 
+  if (!showUI) return null;
 
   return (
     <div className="space-y-4 border border-[#333] rounded-md p-4">
@@ -79,44 +79,23 @@ export function WalletActions() {
         {isConnected ? (
           <div className="flex flex-col space-y-4 justify-start">
             <p className="text-sm text-left">
-              Connected to wallet:{" "}
+              Connected to wallet: {" "}
               <span className="bg-white font-mono text-black rounded-md p-[4px]">
                 {address}
               </span>
             </p>
             <p className="text-sm text-left">
-              Chain Id:{" "}
+              Chain Id: {" "}
               <span className="bg-white font-mono text-black rounded-md p-[4px]">
                 {chainId}
               </span>
             </p>
-            {chainId === monadTestnet.id ? (
-              <div className="flex flex-col space-y-2 border border-[#333] p-4 rounded-md">
-                <h2 className="text-lg font-semibold text-left">
-                  Send Transaction Example
-                </h2>
-                <button
-                  className="bg-white text-black rounded-md p-2 text-sm"
-                  onClick={sendTransactionHandler}
-                >
-                  Send Transaction
-                </button>
-                <button
-                  className="bg-white text-black rounded-md p-2 text-sm"
-                  onClick={() => submitScoreHandler(1234)} // test skoru
-                >
-                  Submit Score: 1234
-                </button>
-              </div>
-            ) : (
-              <button
-                className="bg-white text-black rounded-md p-2 text-sm"
-                onClick={() => switchChain({ chainId: monadTestnet.id })}
-              >
-                Switch to Monad Testnet
-              </button>
-            )}
-
+            <button
+              className="bg-white text-black rounded-md p-2 text-sm"
+              onClick={() => submitScoreHandler(1234)}
+            >
+              Submit Score
+            </button>
             <button
               className="bg-white text-black rounded-md p-2 text-sm"
               onClick={() => disconnect()}
@@ -124,17 +103,13 @@ export function WalletActions() {
               Disconnect Wallet
             </button>
           </div>
-        ) : isEthProviderAvailable ? (
+        ) : (
           <button
             className="bg-white text-black w-full rounded-md p-2 text-sm"
             onClick={() => connect({ connector: farcasterFrame() })}
           >
             Connect Wallet
           </button>
-        ) : (
-          <p className="text-sm text-left">
-            Wallet connection only via Warpcast
-          </p>
         )}
       </div>
     </div>
