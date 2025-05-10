@@ -43,6 +43,8 @@ export function WalletActions() {
       value: parseEther("0.0000001"),
     });
   }
+
+  
 useEffect(() => {
   if (typeof window !== "undefined") {
     window.submitScoreFromIframe = async (score: number): Promise<string> => {
@@ -53,8 +55,8 @@ useEffect(() => {
       }
 
       try {
-        // Eğer wallet bağlı değilse bağlan
         let walletAddress = address;
+
         if (!isConnected) {
           const result = await connectAsync({ connector: farcasterFrame() });
           walletAddress = result.accounts?.[0];
@@ -62,15 +64,18 @@ useEffect(() => {
           if (!walletAddress) throw new Error("No wallet address after connect");
         }
 
-        // Chain yanlışsa değiştir
         if (chainId !== monadTestnet.id) {
           console.log("Switching chain...");
           await switchChain({ chainId: monadTestnet.id });
-          // Zincir değiştikten sonra bekleyip yeniden bağlan
-          await new Promise((res) => setTimeout(res, 300));
+          await new Promise((r) => setTimeout(r, 500)); // zincir değişimi sonrası kısa gecikme
+
+          // ✅ tekrar connect çağır
+          const reconnected = await connectAsync({ connector: farcasterFrame() });
+          walletAddress = reconnected.accounts?.[0];
+          if (!walletAddress) throw new Error("Reconnect failed after switch");
+          console.log("Tekrar bağlanıldı:", walletAddress);
         }
 
-        // Doğrudan güncel walletClient al
         const freshClient = await getWalletClient(config, {
           account: walletAddress!,
           chainId: monadTestnet.id,
@@ -90,7 +95,7 @@ useEffect(() => {
 
         console.log("✅ Transaction sent:", txHash);
 
-        // Sayfayı kısa bir gecikmeyle yenile
+        // ✅ Sayfayı 3 saniye sonra yenile
         setTimeout(() => {
           window.location.reload();
         }, 3000);
@@ -110,6 +115,7 @@ useEffect(() => {
   switchChain,
   address,
 ]);
+
 
   return <></>;
 }
