@@ -130,9 +130,18 @@
 			console.error("Score submit error:", err);
 			alert("Score submit error!");
 		}*/
-		const result = await sendScore(totalScore);
-		console.log(result)
-		location.reload();
+		try {
+			const result = await sendScore(totalScore);
+			console.log("✅ Score submitted. Hash:", result);
+			setTimeout(() => {
+				console.log("Reloading page...");
+				location.reload();
+			}, 1000);
+		} catch (e) {
+			console.error("Score submission failed:", e);
+		}
+
+
 	  });
 
 
