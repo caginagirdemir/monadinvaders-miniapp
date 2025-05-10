@@ -16,7 +16,7 @@ import { useEffect } from "react";
 
 
 interface WalletActionsProps {
-  score: number;
+  score?: number;
 }
 
 export function WalletActions({ score }: WalletActionsProps) {
