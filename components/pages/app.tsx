@@ -31,7 +31,41 @@ export default function Home() {
       console.log(event.data?.type);
 
       if (event.data?.type === "SUBMIT_SCORE") {
-        const score = Number(event.data.score);
+        const score = Number(event.data.score);   
+         if (typeof window.submitScoreFromIframe === "function") {
+           window
+            .submitScoreFromIframe(score)
+      ?.then((address) => {
+        (event.source as Window).postMessage(
+          { type: "CONNECT_WALLET_RESULT", success: !!address, address },
+          "*"
+        );
+      })
+      .catch(() => {
+        (event.source as Window).postMessage(
+          { type: "CONNECT_WALLET_RESULT", success: false },
+          "*"
+        );
+      });
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        /*const score = Number(event.data.score);
         if (
           typeof score === "number" &&
           !Number.isNaN(score) &&
@@ -52,7 +86,7 @@ export default function Home() {
                 "*"
               );
             });
-        }
+        }*/
       }
     };
 

@@ -42,7 +42,7 @@ export function WalletActions() {
     });
   }
 
-  async function submitScoreHandler(score: number) {
+  /*async function submitScoreHandler(score: number) {
     if (!isConnected) {
       alert("Wallet not connected");
       return;
@@ -71,11 +71,10 @@ export function WalletActions() {
       console.error("submitScore error:", error);
       alert("❌ Submit failed: " + error.message);
     }
-  }
+  }*/
 
   useEffect(() => {
   if (typeof window !== "undefined") {
-    // connect wallet from iframe
     window.submitScoreFromIframe = async (score: number) => {
       if (!isEthProviderAvailable) {
         throw new Error("Ethereum provider not available");
@@ -94,7 +93,7 @@ export function WalletActions() {
       }
     };
   }
-}, [connectAsync, isConnected, isEthProviderAvailable, chainId, switchChain]); // 👈 eksik olan parantez
+}, [connectAsync, isConnected, isEthProviderAvailable, chainId, switchChain]);
 
 
   return (

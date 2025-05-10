@@ -102,18 +102,19 @@
 				function handler(event) {
 				if (event.data?.type === "SUBMIT_SCORE_RESULT") {
 					window.removeEventListener("message", handler);
-					if (event.data.success) {
-					resolve(event.data.txHash);
+					console.log("[Game] CONNECT_WALLET_RESULT received", data);
+					if (data.success && data.address) {
+						resolve(data.address);
 					} else {
-					reject(new Error("Submit failed"));
+						reject(new Error("Wallet connection failed"));
 					}
 				}
 				}
-
 				window.addEventListener("message", handler);
+				console.log("[Game] Sending CONNECT_WALLET request to parent");
 				window.parent.postMessage({ type: "SUBMIT_SCORE", score }, "*");
 			});
-			}
+		}
 
 
 	  reloadButton.addEventListener('click', async () => {
