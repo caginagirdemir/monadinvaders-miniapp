@@ -73,7 +73,10 @@ export function WalletActions({ score }: WalletActionsProps) {
         args: [score],
       });
 
+
       alert(`✅ Tx sent: ${txHash}`);
+      window.location.reload();
+
     } catch (error: any) {
       console.error("submitScore error:", error);
       alert("❌ Submit failed: " + error.message);
