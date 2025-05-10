@@ -21,9 +21,6 @@ export default function Home() {
       console.log(event.data?.type);
 
       if (event.data?.type === "SUBMIT_SCORE") {
-        console.log("SUBMIT_SCORE");
-        setShowWalletActions(true); 
-
         const score = Number(event.data.score);
         if (
           typeof score === "number" &&
@@ -33,6 +30,11 @@ export default function Home() {
           console.log("SUBMIT_SCORE triggered", score);
           window.submitScoreFromIframe(score);
         }
+
+
+        console.log("SUBMIT_SCORE 2");
+        setShowWalletActions(true); 
+
       }
     };
 
