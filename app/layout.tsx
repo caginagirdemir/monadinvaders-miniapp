@@ -19,7 +19,7 @@ export const metadata = {
           type: "launch_frame",
           name: "Monad Invaders",
           url: "https://monadinvaders-miniapp-dev.vercel.app",
-          splashImageUrl: "https://monadinvaders-miniapp.vercel.app/images/splash.png",
+          splashImageUrl: "https://monadinvaders-miniapp-dev.vercel.app/images/splash.png",
           splashBackgroundColor: "#000000"
         }
       }
