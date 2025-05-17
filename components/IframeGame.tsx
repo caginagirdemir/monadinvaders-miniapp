@@ -7,10 +7,12 @@ export default function IframeGame() {
       sandbox="allow-scripts allow-same-origin allow-modals"
       style={{
         width: "100%",
-        height: "600px",
+        aspectRatio: "3 / 2",
         border: "none",
         backgroundColor: "black",
+        display: "block"
       }}
+
       title="Game"
     />
   );
