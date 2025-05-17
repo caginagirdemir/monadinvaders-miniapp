@@ -53,9 +53,24 @@
 		
 
 
-	  const canvas = document.getElementById('game-canvas');
-	  canvas.height = 600;
-	  canvas.width = 900;
+	 const canvas = document.getElementById('game-canvas');
+
+		const targetAspect = 900 / 600; // = 1.5
+
+		let availableWidth = window.innerWidth;
+		let availableHeight = window.innerHeight;
+
+		let computedWidth = availableWidth;
+		let computedHeight = availableWidth / targetAspect;
+
+		if (computedHeight > availableHeight) {
+		computedHeight = availableHeight;
+		computedWidth = availableHeight * targetAspect;
+		}
+
+		canvas.width = computedWidth;
+		canvas.height = computedHeight;
+
 	
 	  const canvasSize = [canvas.width, canvas.height];
 	  const ctx        = canvas.getContext('2d');
