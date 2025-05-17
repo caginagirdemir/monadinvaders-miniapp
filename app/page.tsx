@@ -10,7 +10,7 @@ const frame = {
     action: {
       type: "launch_frame",
       name: "Monad Invaders",
-      url: 'https://monadinvaders-miniapp.vercel.app',
+      url: 'https://monadinvaders-miniapp-dev.vercel.app',
       splashImageUrl: `${APP_URL}/images/splash.png`,
       splashBackgroundColor: "#ffffff",
     },
@@ -19,10 +19,10 @@ const frame = {
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
-    title: "Monad Farcaster MiniApp Template",
+    title: "Monad Invaders",
     openGraph: {
-      title: "Monad Farcaster MiniApp Template",
-      description: "A template for building mini-apps on Farcaster and Monad",
+      title: "Monad Invaders",
+      description: "Monad Invaders",
     },
     other: {
       "fc:frame": JSON.stringify(frame),
