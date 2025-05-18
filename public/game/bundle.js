@@ -60,6 +60,7 @@
 	
 	  const canvasSize = [canvas.width, canvas.height];
 	  const ctx        = canvas.getContext('2d');
+	console.log("test6")
 	  const mainLogo           = document.getElementById('main-logo');
 	  const playGameButton     = document.getElementById('play-game');
 	  const playGameButtonMobile     = document.getElementById('play-game-mobile');
