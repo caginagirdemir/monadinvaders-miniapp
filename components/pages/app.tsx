@@ -1,4 +1,5 @@
 "use client";
+import Head from "next/head"; 
 
 import { useMiniAppContext } from "@/hooks/use-miniapp-context";
 import IframeGame from "@/components/IframeGame";
@@ -36,10 +37,29 @@ export default function AppPage() {
   }, []);
 
   return (
+  <>
+    <Head>
+      <meta name="fc:frame" content='{
+        "version": "vNext",
+        "imageUrl": "https://monadinvaders-miniapp-dev.vercel.app/images/feed.png",
+        "buttons": [
+          {
+            "title": "Oyna",
+            "action": {
+              "type": "link",
+              "url": "https://monadinvaders.xyz"
+            }
+          }
+        ]
+      }' />
+    </Head>
+
     <div style={{ overflowY: "hidden", height: "100vh", backgroundColor: "black" }}>
       {!showWalletActions && <IframeGame />}
       {showWalletActions && isEthProviderAvailable && <WalletActions score={score} />}
     </div>
-  );
+  </>
+);
+
 
 }
