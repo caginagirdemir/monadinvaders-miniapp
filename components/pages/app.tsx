@@ -4,7 +4,7 @@ import { useMiniAppContext } from "@/hooks/use-miniapp-context";
 import IframeGame from "@/components/IframeGame";
 import { WalletActions } from "@/components/Home/WalletActions";
 import { useEffect, useState } from "react";
-
+import Head from "next/head";
 declare global {
   interface Window {
     submitScoreFromIframe?: (score: number) => void;
@@ -36,10 +36,30 @@ export default function AppPage() {
   }, []);
 
   return (
-    <div style={{ overflowY: "hidden", height: "100vh", backgroundColor: "black" }}>
-      {!showWalletActions && <IframeGame />}
-      {showWalletActions && isEthProviderAvailable && <WalletActions score={score} />}
-    </div>
+    <>
+      <Head>
+        <meta name="fc:frame" content='{
+          "version": "vNext",
+          "imageUrl": "https://monadinvaders-miniapp-dev.vercel.app/images/feed.png",
+          "buttons": [
+            {
+              "title": "Play Game",
+              "action": {
+                "type": "link",
+                "url": "https://monadinvaders.xyz"
+              }
+            }
+          ]
+        }' />
+      </Head>
+
+      <div style={{ overflowY: "hidden", height: "100vh", backgroundColor: "black" }}>
+        {!showWalletActions && <IframeGame />}
+        {showWalletActions && isEthProviderAvailable && <WalletActions score={score} />}
+      </div>
+    </>
+
+
   );
 
 }
