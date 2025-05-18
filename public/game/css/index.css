@@ -47,7 +47,8 @@ body {
   
   width: 100%;
   max-width: 400px;
-  height: 100vh;
+  aspect-ratio: 2 / 3;
+  height: auto;
 }
 
 #game-canvas {
