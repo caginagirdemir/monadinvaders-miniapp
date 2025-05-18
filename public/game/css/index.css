@@ -39,16 +39,16 @@ body {
   background-color: #555;
 }
 
+html, body {
+  height: 100%;
+}
 
 #container {
-  width: 400px;
-  position: relative;
-  background-color: #000;
-  
   width: 100%;
   max-width: 400px;
-  aspect-ratio: 2 / 3;
-  height: auto;
+  height: 100%;
+  position: relative;
+  background-color: #000;
 }
 
 #game-canvas {

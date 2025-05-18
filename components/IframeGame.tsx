@@ -12,7 +12,7 @@ export default function IframeGame() {
         backgroundColor: "black",
         display: "block"
       }}
-
+      
       title="Game"
     />
   );
