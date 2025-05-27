@@ -633,7 +633,7 @@
 	      invaderShipImage = document.getElementById('grunt-1');
 	    }
 	
-	    for (let x = 1; x < 10; x++, invaderIdx++) {
+	    for (let x = 1; x < 8; x++, invaderIdx++) {
 	      let invaderShip = new Ship ({
 	        id: invaderIdx,
 	        name: invaderShipName,
@@ -642,7 +642,7 @@
 	        img: invaderShipImage,
 	        radius: 20,
 	        pos: [
-	          x * 55,
+	          x * 75,
 	          y
 	        ],
 	        vel: vel,
@@ -650,7 +650,7 @@
 	      });
 	      this.invaderShips.push(invaderShip);
 	    }
-	    y += 50;
+	    y += 60;
 	  }
 	
 	};
@@ -934,7 +934,7 @@
 	
 	Ship.prototype.draw = function(ctx) {
 		const scale = this.canvasSize[0] / 900;
-		const size = 40 * scale;
+		const size = 50 * scale;
 		let x = this.pos[0] - size / 2;
 		let y = this.pos[1] - size / 2;
 
