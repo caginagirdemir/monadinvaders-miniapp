@@ -6,11 +6,11 @@ import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
 export const metadata = {
-  title: "Monad Farcaster MiniApp Template",
-  description: "A template for building mini-apps on Farcaster and Monad",
+  title: "Monad Invaders",
+  description: "Monad Invaders",
   other: {
     "fc:frame": JSON.stringify({
-      version: "1",
+      version: "next",
       imageUrl: "https://monadinvaders-miniapp.vercel.app/images/feed.png",
       iconUrl: "https://monadinvaders-miniapp.vercel.app/images/splash.png",
       name: "Monad Invaders",
