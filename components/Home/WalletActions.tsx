@@ -135,7 +135,7 @@ return (
           )}
 
           <button
-            className="bg-black text-white rounded-md p-2 text-sm hover:bg-gray-800 border border-white"
+            className="bg-black text-white rounded-md p-2 text-sm hover:bg-gray-800 border-2 border-white"
             onClick={() => disconnect()}
           >
             Disconnect Wallet
