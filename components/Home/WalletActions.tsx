@@ -91,6 +91,8 @@ return (
     <Image
       src="/game/images/game-over.png"
       alt="Game Over"
+      width={300} 
+      height={200}
       priority
     />
   </div>
@@ -117,7 +119,7 @@ return (
                 Submit Score
               </h2>
               <button
-                className="bg-black text-white rounded-md p-2 text-sm hover:bg-gray-800"
+                className="bg-black text-white rounded-md p-2 text-sm hover:bg-gray-800 border border-white"
                 onClick={() => submitScoreHandler(score!)}
               >
                 Submit Score: {score}
@@ -125,7 +127,7 @@ return (
             </div>
           ) : (
             <button
-              className="bg-black text-white rounded-md p-2 text-sm hover:bg-gray-800"
+              className="bg-black text-white rounded-md p-2 text-sm hover:bg-gray-800 border border-white"
               onClick={() => switchChain({ chainId: monadTestnet.id })}
             >
               Switch to Monad Testnet
@@ -133,7 +135,7 @@ return (
           )}
 
           <button
-            className="bg-black text-white rounded-md p-2 text-sm hover:bg-gray-800"
+            className="bg-black text-white rounded-md p-2 text-sm hover:bg-gray-800 border border-white"
             onClick={() => disconnect()}
           >
             Disconnect Wallet
@@ -141,7 +143,7 @@ return (
         </div>
       ) : isEthProviderAvailable ? (
         <button
-          className="bg-black text-white w-full rounded-md p-2 text-sm hover:bg-gray-800"
+          className="bg-black text-white w-full rounded-md p-2 text-sm hover:bg-gray-800 border border-white"
           onClick={() => connect({ connector: farcasterFrame() })}
         >
           Connect Wallet
