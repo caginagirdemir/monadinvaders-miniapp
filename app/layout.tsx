@@ -10,11 +10,12 @@ export const metadata = {
   description: "A template for building mini-apps on Farcaster and Monad",
   other: {
     "fc:frame": JSON.stringify({
-      version: "next",
-      imageUrl: "https://monadinvaders-miniapp.vercel.app/feed.png",
+      version: "1",
+      imageUrl: "https://monadinvaders-miniapp.vercel.app/images/feed.png",
+      iconUrl: "https://monadinvaders-miniapp.vercel.app/images/splash.png",
       name: "Monad Invaders",
       button: {
-        title: "Oyna",
+        title: "Play Game",
         action: {
           type: "launch_frame",
           name: "Monad Invaders",
