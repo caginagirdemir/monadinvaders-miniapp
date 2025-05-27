@@ -35,7 +35,7 @@ export default function AppPage() {
   }, []);
 
   return (
-      <div style={{ overflowY: "hidden", height: "99vh", backgroundColor: "black" }}>
+      <div style={{ overflowY: "hidden", height: "100vh", backgroundColor: "black" }}>
         {!showWalletActions && <IframeGame />}
         {showWalletActions && isEthProviderAvailable && <WalletActions score={score} />}
       </div>
