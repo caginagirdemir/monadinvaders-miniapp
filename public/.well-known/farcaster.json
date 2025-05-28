@@ -2,9 +2,20 @@
   "frame": {
     "version": "1",
     "name": "Monad Invaders",
-    "iconUrl": "https://monadinvaders-miniapp.vercel.app/images/icon.png",
     "homeUrl": "https://monadinvaders-miniapp.vercel.app",
+    "iconUrl": "https://monadinvaders-miniapp.vercel.app/images/monad-invaders-logo.png",
     "splashImageUrl": "https://monadinvaders-miniapp.vercel.app/images/splash.png",
-    "splashBackgroundColor": "#ff5522"
+    "splashBackgroundColor": "#ffffff",
+    "subtitle": "Monad Invaders v1",
+    "description": "",
+    "primaryCategory": "games",
+    "tags": ["oyun", "miniapp", "game"],
+    "screenshotUrls": [
+      "https://monadinvaders-miniapp.vercel.app/images/game_ss/image1.png",
+      "https://monadinvaders-miniapp.vercel.app/images/game_ss/image.png",
+      "https://monadinvaders-miniapp.vercel.app/images/game_ss/image2.png",
+      "https://monadinvaders-miniapp.vercel.app/images/game_ss/image3.png",
+    ]
   }
 }
+
