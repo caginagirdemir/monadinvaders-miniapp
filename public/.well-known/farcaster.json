@@ -7,14 +7,13 @@
     "splashImageUrl": "https://monadinvaders-miniapp.vercel.app/images/splash.png",
     "splashBackgroundColor": "#ffffff",
     "subtitle": "Monad Invaders v1",
-    "description": "",
+    "description": "Conquer the Monad Galaxy",
     "primaryCategory": "games",
     "tags": ["oyun", "miniapp", "game"],
     "screenshotUrls": [
       "https://monadinvaders-miniapp.vercel.app/images/game_ss/image1.png",
       "https://monadinvaders-miniapp.vercel.app/images/game_ss/image.png",
-      "https://monadinvaders-miniapp.vercel.app/images/game_ss/image2.png",
-      "https://monadinvaders-miniapp.vercel.app/images/game_ss/image3.png"
+      "https://monadinvaders-miniapp.vercel.app/images/game_ss/image2.png"
     ]
   }
 }
