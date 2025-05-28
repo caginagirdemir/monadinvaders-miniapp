@@ -1,4 +1,10 @@
 {
+  
+  "accountAssociation": {
+    "header": "eyJmaWQiOjEwNzU0NTEsInR5cGUiOiJjdXN0b2R5Iiwia2V5IjoiMHg1NWE1REUwNDcyMzBhRjgwMzQ5NDg3NTQwNTExOWE3YWM3MDA4MDZhIn0",
+    "payload": "eyJkb21haW4iOiJtb25hZGludmFkZXJzLW1pbmlhcHAudmVyY2VsLmFwcCJ9",
+    "signature": "MHg2NDcwMTA0M2UyODM1OTllMmY4MTJmOGFlNWNjNTVkOWQzZTM0MDAyNGVmNTRiZTU1YzAyNmExY2U4NjE0NmRkNmEzMzc3ZWU0ZTVkMjZmZTI3NTljN2I1MThhNWY1MWViMzdiZTI2YWY2YTQ1OTM0ZDE1MWMwOTA4NTgyOTNlODFj"
+  },
   "frame": {
     "version": "1",
     "name": "Monad Invaders",
